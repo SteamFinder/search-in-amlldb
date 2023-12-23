@@ -44,22 +44,22 @@ function App() {
             selectedKeys={selectedKey}
             items={[
               {
-                key: '/',
+                key: '/search-in-amlldb/',
                 icon: <HomeOutlined />,
                 label: '主页',
               },
               {
-                key: '/search',
+                key: '/search-in-amlldb/search',
                 icon: <SearchOutlined />,
                 label: '搜索',
               },
               {
-                key: '/database',
+                key: '/search-in-amlldb/database',
                 icon: <DatabaseOutlined />,
                 label: '数据库',
               },
               {
-                key: '/ttml-tool',
+                key: '/search-in-amlldb/ttml-tool',
                 icon: <ToolOutlined />,
                 label: 'TTML工具',
               },
