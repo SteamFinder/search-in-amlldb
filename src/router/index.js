@@ -9,7 +9,7 @@ import { createBrowserRouter } from "react-router-dom";
 const router = createBrowserRouter(
     [
         {
-            path: '/search-in-amlldb/',
+            path: '/search-in-amlldb',
             element: <App />,
             children: [
                 {
@@ -17,15 +17,15 @@ const router = createBrowserRouter(
                     element: <Main />
                 },
                 {
-                    path: 'search',
+                    path: '/search-in-amlldb/search',
                     element: <Search />
                 },
                 {
-                    path: 'database',
+                    path: '/search-in-amlldb/database',
                     element: <Database />
                 },
                 {
-                    path: 'ttml-tool',
+                    path: '/search-in-amlldb/ttml-tool',
                     element: <TTMLtool />
                 }
             ]
