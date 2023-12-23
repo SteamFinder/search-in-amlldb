@@ -44,7 +44,7 @@ function App() {
             selectedKeys={selectedKey}
             items={[
               {
-                key: '/search-in-amlldb/',
+                key: '/search-in-amlldb',
                 icon: <HomeOutlined />,
                 label: '主页',
               },
