@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, message, Space, Progress } from 'antd';
+import { Button, message, Progress } from 'antd';
 
 function Localdb() {
     // 全局通知
@@ -79,10 +79,12 @@ function Localdb() {
                         }
 
                         // 部分无版权歌曲统一替换url
-                        if (data_1.data.url == null) {
-                            data_1.data.url = 'http://www.baidu.com';
+                        console.log(i ,"获取歌曲url" , data_1.data[0].url)
+                        if (data_1.data[0].url == null) {
+                            console.log(i ,"判断为null" , data_1.data[0].url)
+                            data_1.data[0].url = 'http://www.baidu.com';
                         }
-                        const s_downurl = data_1.data.url.replace(/^http:/, "https:");
+                        const s_downurl = data_1.data[0].url.replace(/^http:/, "https:");
                         const newData = { s_id: ttml_id, s_name: s_name, s_sname: s_sname, s_pic: s_pic, s_downurl: s_downurl, ttml_url: ttml_url, ttml_downurl: ttml_downurl, time_ver: time_ver };
                         amll_data.push(newData);
                         i++;

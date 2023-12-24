@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Space, Table, Drawer } from 'antd';
 /*
 [
@@ -59,14 +59,15 @@ function Database() {
     };
     const onClose = () => {
         setOpen(false);
+        pauseAudio();
     };
 
     // Aplayer-react
-    const apsets = {
-        "name": "梦泽沧沧",
-        "artist": "漆柚",
-        "cover": "https://p2.music.126.net/idpBKqSHCDfEw8RAofHWbQ==/109951163540042089.jpg",
-        "url": "https://m8.music.126.net/20231224124752/2106e023cd4878f5c8a04cd5491fc3fd/ymusic/8c92/0ab2/2d9b/4a4416017171a3d1505e50567474b257.mp3"
+    const audioRef = useRef(null);
+    const pauseAudio = () => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+        }
     };
 
     // 用来接收点击事件
@@ -78,7 +79,7 @@ function Database() {
             <p key={matchedDetail.s_id}>歌曲id:{matchedDetail.s_id}</p>,
             <p key={matchedDetail.s_name}>歌曲名称:{matchedDetail.s_name}</p>,
             <p key={matchedDetail.s_sname}>歌手名称:{matchedDetail.s_sname}</p>,
-            <p key={matchedDetail.s_downurl}><audio src={matchedDetail.s_downurl} controls /></p>,
+            <p key={matchedDetail.s_downurl}><audio src={matchedDetail.s_downurl} ref={audioRef} controls /></p>,
             <p key={matchedDetail.s_pic}><img src={matchedDetail.s_pic} width="50vh" /></p>,
             <p key={matchedDetail.ttml_url}>TTML url:<br />{matchedDetail.ttml_url}</p>,
             <p key={matchedDetail.ttml_downurl}>TTML down:<br />{matchedDetail.ttml_downurl}</p>
