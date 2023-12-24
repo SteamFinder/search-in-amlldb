@@ -70,7 +70,7 @@ function Localdb() {
                             setProgressHint("匹配文件信息");
                         }
 
-                        const response_1 = await fetch('https://autumnfish.cn/song/download/url?id=' + ttml_id + '&br=320000');
+                        const response_1 = await fetch('https://autumnfish.cn/song/url/v1?id=' + ttml_id + '&level=standard');
                         const data_1 = await response_1.json();
 
                         if( i == Math.ceil(maplength / 1.5) ){ 
