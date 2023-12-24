@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Table } from 'antd';
+import { Space, Table, Drawer } from 'antd';
 /*
 [
 {
@@ -13,44 +13,79 @@ import { Space, Table } from 'antd';
 }
 ]
 */
-const columns = [
-    {
-        title: '歌曲图片',
-        dataIndex: 's_pic',
-        key: 's_pic',
-    },
-    {
-        title: '歌曲名称',
-        dataIndex: 's_name',
-        key: 's_name',
-    },
-    {
-        title: '歌手',
-        dataIndex: 's_sname',
-        key: 's_sname',
-    },
-    {
-        title: '歌曲id',
-        dataIndex: 's_id',
-        key: 's_id',
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
-            <Space size="middle" onClick={() => handleDetailClick(record.s_id)} key='s_id'>
-                <a>详情</a>
-            </Space>
-        ),
-    },
-];
 
-const handleDetailClick = (s_id) => {
-    console.log('点击详情，歌曲id:', s_id);
-    // 在这里可以进行其他操作，比如弹窗显示详情等
-};
+// 声明一个全局变量 用来展示详情
+var details = [];
 
 function Database() {
+    // Columns
+    const columns = [
+        {
+            title: '歌曲图片',
+            dataIndex: 's_pic',
+            key: 's_pic',
+        },
+        {
+            title: '歌曲名称',
+            dataIndex: 's_name',
+            key: 's_name',
+        },
+        {
+            title: '歌手',
+            dataIndex: 's_sname',
+            key: 's_sname',
+        },
+        {
+            title: '歌曲id',
+            dataIndex: 's_id',
+            key: 's_id',
+        },
+        {
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle" onClick={() => handleDetailClick(record.s_id)} key={record.s_id}>
+                    <a>详情</a>
+                </Space>
+            ),
+        },
+    ];
+
+    // 新建一个Drawer
+    const [open, setOpen] = useState(false);
+    const [drawerinfo, setDrawerinfo] = useState("无信息");
+    const showDrawer = () => {
+        setOpen(true);
+    };
+    const onClose = () => {
+        setOpen(false);
+    };
+
+    // Aplayer-react
+    const apsets = {
+        "name": "梦泽沧沧",
+        "artist": "漆柚",
+        "cover": "https://p2.music.126.net/idpBKqSHCDfEw8RAofHWbQ==/109951163540042089.jpg",
+        "url": "https://m8.music.126.net/20231224124752/2106e023cd4878f5c8a04cd5491fc3fd/ymusic/8c92/0ab2/2d9b/4a4416017171a3d1505e50567474b257.mp3"
+    };
+
+    // 用来接收点击事件
+    const handleDetailClick = (s_id) => {
+        console.log('点击详情,歌曲id:', s_id);
+        const matchedDetail = details.find(detail => detail.s_id === s_id);
+        console.log("匹配成功:", matchedDetail);
+        setDrawerinfo([
+            <p key={matchedDetail.s_id}>歌曲id:{matchedDetail.s_id}</p>,
+            <p key={matchedDetail.s_name}>歌曲名称:{matchedDetail.s_name}</p>,
+            <p key={matchedDetail.s_sname}>歌手名称:{matchedDetail.s_sname}</p>,
+            <p key={matchedDetail.s_downurl}><audio src={matchedDetail.s_downurl} controls /></p>,
+            <p key={matchedDetail.s_pic}><img src={matchedDetail.s_pic} width="50vh" /></p>,
+            <p key={matchedDetail.ttml_url}>TTML url:<br />{matchedDetail.ttml_url}</p>,
+            <p key={matchedDetail.ttml_downurl}>TTML down:<br />{matchedDetail.ttml_downurl}</p>
+        ])
+        showDrawer();
+    };
+
     // 从 localStorage 中检索存储的字符串
     var localdata = [];
     var storedMusicDataString = localStorage.getItem('amlldata');
@@ -60,6 +95,7 @@ function Database() {
     } else {
         // 将字符串解析为数组
         const storedMusicData = JSON.parse(storedMusicDataString);
+        details = storedMusicData;
         var localdata = [];
         storedMusicData.map(item => (
             // 使用map生成React元素
@@ -102,7 +138,12 @@ function Database() {
     }, [data]); // 空数组表示只在组件挂载和卸载时运行
 
     return (
-        <Table columns={columns} dataSource={data} size='middle' pagination={{ pageSize: 8, showSizeChanger: false, showQuickJumper: true }} />
+        <>
+            <Table columns={columns} dataSource={data} size='middle' pagination={{ pageSize: 8, showSizeChanger: false, showQuickJumper: true }} />
+            <Drawer title="歌曲详情" placement="right" onClose={onClose} open={open}>
+                {drawerinfo}
+            </Drawer>
+        </>
     );
 }
 

@@ -70,7 +70,7 @@ function Localdb() {
                             setProgressHint("匹配文件信息");
                         }
 
-                        const response_1 = await fetch('https://autumnfish.cn/song/url/v1?id=' + ttml_id + '&level=standard');
+                        const response_1 = await fetch('https://autumnfish.cn/song/download/url?id=' + ttml_id + '&br=320000');
                         const data_1 = await response_1.json();
 
                         if( i == Math.ceil(maplength / 1.5) ){ 
@@ -79,10 +79,10 @@ function Localdb() {
                         }
 
                         // 部分无版权歌曲统一替换url
-                        if (data_1.data[0].url == null) {
-                            data_1.data[0].url = 'http://www.baidu.com';
+                        if (data_1.data.url == null) {
+                            data_1.data.url = 'http://www.baidu.com';
                         }
-                        const s_downurl = data_1.data[0].url.replace(/^http:/, "https:");
+                        const s_downurl = data_1.data.url.replace(/^http:/, "https:");
                         const newData = { s_id: ttml_id, s_name: s_name, s_sname: s_sname, s_pic: s_pic, s_downurl: s_downurl, ttml_url: ttml_url, ttml_downurl: ttml_downurl, time_ver: time_ver };
                         amll_data.push(newData);
                         i++;
