@@ -46,8 +46,9 @@ function Database() {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
-                <Space size="middle" onClick={() => handleDetailClick(record.s_id)} key={record.s_id}>
-                    <a>详情</a>
+                <Space size="middle" key={record.s_id}>
+                    <a onClick={() => handleDetailClick(record.s_id)}>详情</a>
+                    <a onClick={() => handlePlayClick(record.s_id)}>播放</a>
                 </Space>
             ),
         },
@@ -133,6 +134,15 @@ function Database() {
         );
         showDrawer();
     };
+
+        // 用来接收点击事件 播放
+        const handlePlayClick = (s_id) => {
+            console.log('点击播放,歌曲id:', s_id);
+            const matchedDetail = details.find(detail => detail.s_id === s_id);
+            console.log("匹配成功:", matchedDetail);
+            localStorage.setItem('amllplay', JSON.stringify(matchedDetail));
+            window.dispatchEvent(new Event('playDataChanged'));
+        };
 
     // 从 localStorage 中检索存储的字符串
     var localdata = [];

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Localplay from "./components/localplay";
 import Localdb from "./components/localdb";
 import {
   MenuFoldOutlined,
@@ -7,10 +8,12 @@ import {
   HomeOutlined,
   SearchOutlined,
   ToolOutlined,
+  PlayCircleOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme, notification } from 'antd';
+import { Layout, Menu, Button, theme, notification, Drawer } from 'antd';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 const { Header, Sider, Content, Footer } = Layout;
+
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -117,18 +120,20 @@ function App() {
                 height: 64,
               }}
             />
+            <Localplay />
             <Localdb />
           </Header>
           <Content style={contentStyle}>
             {/* 二级路由出口 */}
             <Outlet />
+            {/* AMLL Drawer */}
           </Content>
           <Footer
             style={{
               textAlign: 'center',
             }}
           >
-            Search In AMLL-DB@1.0.0 React
+            Search In AMLL-DB@1.9.0 React
           </Footer>
         </Layout>
       </Layout>
