@@ -79,7 +79,7 @@ function Localdb() {
                         }
 
                         // 部分无版权歌曲统一替换url
-                        console.log(i ,"获取歌曲url" , data_1.data[0].url)
+                        // console.log(i ,"获取歌曲url" , data_1.data[0].url)
                         if (data_1.data[0].url == null) {
                             console.log(i ,"判断为null" , data_1.data[0].url)
                             data_1.data[0].url = 'http://www.baidu.com';
