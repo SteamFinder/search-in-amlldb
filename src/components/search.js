@@ -269,7 +269,7 @@ function Search() {
                         },
                     ]}
                 />
-                <Input placeholder="请在此输入要查询的歌曲id/名称" onChange={(e) => setInputValue(e.target.value)} />
+                <Input placeholder="请在此输入要查询的歌曲id/名称,支持模糊查询" onChange={(e) => setInputValue(e.target.value)} />
                 <Button type="primary" onClick={handleSearch} disabled={button_disabled}>查询</Button>
                 {progressVisible && (
                     <Button type="text">
