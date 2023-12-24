@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Space, Table, Drawer } from 'antd';
+import { Space, Table, Drawer, Card } from 'antd';
+import { WarningTwoTone } from '@ant-design/icons';
 /*
 [
 {
@@ -18,6 +19,7 @@ import { Space, Table, Drawer } from 'antd';
 var details = [];
 
 function Database() {
+
     // Columns
     const columns = [
         {
@@ -70,20 +72,65 @@ function Database() {
         }
     };
 
+    const [contentList, setContentlist] = useState({
+        tab1: <p key="tab1">无信息 tab1</p>,
+        tab2: <p key="tab2">无信息 tab2</p>,
+        tab3: <p key="tab3">无信息 tab3</p>,
+    });
+    // 资源下载列表Tabs
+    const tabList = [
+        {
+            key: 'tab1',
+            tab: '歌曲资源',
+        },
+        {
+            key: 'tab2',
+            tab: 'TTML歌词资源',
+        },
+        {
+            key: 'tab3',
+            tab: '其他资源',
+        },
+    ];
+    const [activeTabKey1, setActiveTabKey1] = useState('tab1');
+    // Tabs
+    const onTab1Change = (key) => {
+        setActiveTabKey1(key);
+    };
+
     // 用来接收点击事件
     const handleDetailClick = (s_id) => {
         console.log('点击详情,歌曲id:', s_id);
         const matchedDetail = details.find(detail => detail.s_id === s_id);
         console.log("匹配成功:", matchedDetail);
         setDrawerinfo([
+            <p key={matchedDetail.s_pic}><img src={matchedDetail.s_pic} width="80vh" /></p>,
             <p key={matchedDetail.s_id}>歌曲id:{matchedDetail.s_id}</p>,
             <p key={matchedDetail.s_name}>歌曲名称:{matchedDetail.s_name}</p>,
             <p key={matchedDetail.s_sname}>歌手名称:{matchedDetail.s_sname}</p>,
             <p key={matchedDetail.s_downurl}><audio src={matchedDetail.s_downurl} ref={audioRef} controls /></p>,
-            <p key={matchedDetail.s_pic}><img src={matchedDetail.s_pic} width="50vh" /></p>,
-            <p key={matchedDetail.ttml_url}>TTML url:<br />{matchedDetail.ttml_url}</p>,
-            <p key={matchedDetail.ttml_downurl}>TTML down:<br />{matchedDetail.ttml_downurl}</p>
         ])
+        setContentlist(
+            {
+                tab1: <p key="tab1"><WarningTwoTone twoToneColor="#eb2f96"/>
+                    &nbsp;仅供歌词制作使用,请勿用作非法用途
+                    <br /><br />
+                    <a href={matchedDetail.s_downurl} target='_blank'>歌曲文件下载</a>
+                </p>,
+                tab2: <p key="tab2"><WarningTwoTone twoToneColor="#eb2f96"/>
+                    &nbsp;仅供歌词制作使用,请勿用作非法用途
+                    <br /><br />
+                    <a href={matchedDetail.ttml_downurl} target='_blank'>TTML文件下载</a>
+                    <br />
+                    <a href={matchedDetail.ttml_url} target='_blank'>Github歌词文件页面</a>
+                </p>,
+                tab3: <p key="tab3"><WarningTwoTone twoToneColor="#eb2f96"/>
+                    &nbsp;仅供歌词制作使用,请勿用作非法用途
+                    <br /><br />
+                    <a href={"https://music.163.com/#/song?id=" + matchedDetail.s_id} target='_blank'>网易云歌曲详情页面</a>
+                </p>,
+            }
+        );
         showDrawer();
     };
 
@@ -143,6 +190,7 @@ function Database() {
             <Table columns={columns} dataSource={data} size='middle' pagination={{ pageSize: 8, showSizeChanger: false, showQuickJumper: true }} />
             <Drawer title="歌曲详情" placement="right" onClose={onClose} open={open}>
                 {drawerinfo}
+                <Card style={{ width: '100%', }} title="相关资源下载" tabList={tabList} activeTabKey={activeTabKey1} onTabChange={onTab1Change} tabProps={{ size: 'middle', }}>{contentList[activeTabKey1]}</Card>
             </Drawer>
         </>
     );

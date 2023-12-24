@@ -100,7 +100,7 @@ function App() {
               textAlign: 'center',
             }}
           >
-            Search In AMLL-DB@0.2.0 React
+            Search In AMLL-DB@0.3.0 React
           </Footer>
         </Layout>
       </Layout>
