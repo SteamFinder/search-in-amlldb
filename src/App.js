@@ -39,7 +39,7 @@ function App() {
     api.error({
       message: '兼容性提示',
       description:
-        '本网站未对移动端进行针对性适配, 建议使用桌面端设备访问',
+        '本网站未对移动端设备进行针对性适配, 建议使用桌面端设备访问',
       duration: 0,
     });
   };
