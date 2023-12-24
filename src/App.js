@@ -52,12 +52,12 @@ function App() {
       var UAstatus = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       console.log("用户UA 是否移动端", UAstatus);
       if (UAstatus == true && i == 0) {
-        console.log("用户UA 移动端");
+        console.log("用户UA 移动端 进行提示");
         openNotification();
+        i++;
       }
     }
     isMobileDevice();
-    i++;
   }, []);
 
   return (
