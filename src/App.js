@@ -8,7 +8,7 @@ import {
   SearchOutlined,
   ToolOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Button, theme } from 'antd';
+import { Layout, Menu, Button, theme, notification } from 'antd';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 const { Header, Sider, Content, Footer } = Layout;
 function App() {
@@ -17,12 +17,13 @@ function App() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const contentStyle = {
-      margin: '24px 16px',
-      padding: 24,
-      minHeight: 280,
-      background: colorBgContainer,
-      borderRadius: borderRadiusLG,
+    margin: '24px 16px',
+    padding: 24,
+    minHeight: 280,
+    background: colorBgContainer,
+    borderRadius: borderRadiusLG,
   }
+
   // 根据路由高亮
   const navigate = useNavigate();
   const onMenuClick = (route) => {
@@ -31,10 +32,37 @@ function App() {
   }
   const location = useLocation();
   const selectedKey = location.pathname;
-  // 获取数据
+
+  //对手机用户进行提示
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = () => {
+    api.error({
+      message: '兼容性提示',
+      description:
+        '本网站未对移动端进行针对性适配, 建议使用桌面端设备访问',
+      duration: 0,
+    });
+  };
+
+  // 判断用户设备
+  var i = 0;
+  useEffect(() => {
+    function isMobileDevice() {
+      console.log("用户UA 检测");
+      var UAstatus = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      console.log("用户UA 是否移动端", UAstatus);
+      if (UAstatus == true && i == 0) {
+        console.log("用户UA 移动端");
+        openNotification();
+      }
+    }
+    isMobileDevice();
+    i++;
+  }, []);
 
   return (
     <div className="App">
+      {contextHolder}
       <Layout>
         <Sider trigger={null} collapsible collapsed={collapsed}>
           <div className="demo-logo-vertical" />
