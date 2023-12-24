@@ -38,12 +38,18 @@ const columns = [
         title: 'Action',
         key: 'action',
         render: (_, record) => (
-            <Space size="middle">
+            <Space size="middle" onClick={() => handleDetailClick(record.s_id)} key='s_id'>
                 <a>详情</a>
             </Space>
         ),
     },
 ];
+
+const handleDetailClick = (s_id) => {
+    console.log('点击详情，歌曲id:', s_id);
+    // 在这里可以进行其他操作，比如弹窗显示详情等
+};
+
 function Database() {
     // 从 localStorage 中检索存储的字符串
     var localdata = [];
@@ -75,16 +81,16 @@ function Database() {
             var storedMusicDataString = localStorage.getItem('amlldata');
             const storedMusicData = JSON.parse(storedMusicDataString);
             storedMusicData.map(item => (
-            // 使用map生成React元素
-            upddata.push({
-                key: item.s_id,
-                s_pic: <img src={item.s_pic} width='40vh' />,
-                s_name: item.s_name,
-                s_sname: item.s_sname,
-                s_id: item.s_id,
-                action: item.s_id
-            })
-        ))
+                // 使用map生成React元素
+                upddata.push({
+                    key: item.s_id,
+                    s_pic: <img src={item.s_pic} width='40vh' />,
+                    s_name: item.s_name,
+                    s_sname: item.s_sname,
+                    s_id: item.s_id,
+                    action: item.s_id
+                })
+            ))
             setData(upddata);
         };
         // 添加事件监听器
