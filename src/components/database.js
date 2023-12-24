@@ -64,7 +64,7 @@ function Database() {
         pauseAudio();
     };
 
-    // Aplayer-react
+    // Mute audio
     const audioRef = useRef(null);
     const pauseAudio = () => {
         if (audioRef.current) {
