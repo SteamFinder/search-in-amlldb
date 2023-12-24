@@ -190,7 +190,7 @@ function Database() {
             <Table columns={columns} dataSource={data} size='middle' pagination={{ pageSize: 8, showSizeChanger: false, showQuickJumper: true }} />
             <Drawer title="歌曲详情" placement="right" onClose={onClose} open={open}>
                 {drawerinfo}
-                <Card style={{ width: '100%', }} title="相关资源下载" tabList={tabList} activeTabKey={activeTabKey1} onTabChange={onTab1Change} tabProps={{ size: 'middle', }}>{contentList[activeTabKey1]}</Card>
+                <Card style={{ width: '100%', }} title="相关资源下载" tabList={tabList} activeTabKey={activeTabKey1} onTabChange={onTab1Change} tabProps={{ size: 'middle', }} hoverable={true}>{contentList[activeTabKey1]}</Card>
             </Drawer>
         </>
     );
