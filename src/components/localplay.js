@@ -4,6 +4,7 @@ import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
 import { PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons';
 import { Button, Drawer, Divider, Space, Progress } from 'antd';
 import './localplay.css';
+import './SF-D-M.ttf';
 
 function Localplay() {
 
@@ -30,7 +31,7 @@ function Localplay() {
     const [lyricLines, setLyricLines] = useState([]);
     const [drawerContent, setDrawerContent] = useState(<audio id="onAudio" controls />);
     const [albumUrl, setAlbumUrl] = useState("");
-    const lyricPlayerRef = useRef(null);
+    // const lyricPlayerRef = useRef(null);
     var playdata;
     var picUrl;
 
@@ -249,8 +250,7 @@ function Localplay() {
                     alignPosition="0.5"
                     lyricLines={lyricLines}
                     currentTime={currentTime}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '80%' }}
-                    ref={lyricPlayerRef}
+                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '80%' , fontFamily: 'SF Pro Display Medium, sans-serif'}}
                 />
             </Drawer>
         </>
