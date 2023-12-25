@@ -223,9 +223,9 @@ function Localplay() {
             <Drawer title="AMLL-React Player" placement="bottom" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
                 <LyricPlayer
                     onLyricLineClick={(line) => getLines(line)}
-                    alignPosition="0.3" lyricLines={lyricLines}
+                    alignPosition="0.5" lyricLines={lyricLines}
                     currentTime={currentTime}
-                    style={{ position: 'absolute', top: 0, left: "10vw", width: '95vw', height: '100%' , backgroundColor: 'grey' }}
+                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '90%' , backgroundColor: 'grey' }}
                     className="AMLL-Player"
                 />
                 <Space
