@@ -17,7 +17,7 @@ function Localplay() {
     const [size, setSize] = useState();
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
-        setSize('large');
+        setSize('default');
         setOpen(true);
     };
     const onClose = () => {
@@ -187,7 +187,6 @@ function Localplay() {
             console.error('播放被阻止:', error);
         });
     }
-
     return (
         <>
             {!progressVisible && (
@@ -226,7 +225,8 @@ function Localplay() {
                     onLyricLineClick={(line) => getLines(line)}
                     alignPosition="0.3" lyricLines={lyricLines}
                     currentTime={currentTime}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '95%', height: '630px', backgroundColor: 'grey' }}
+                    style={{ position: 'absolute', top: 0, left: "10vw", width: '95vw', height: '100%' , backgroundColor: 'grey' }}
+                    className="AMLL-Player"
                 />
                 <Space
                     direction="vertical"

@@ -2,3 +2,7 @@
     background: grey;
     position: relative;
 }
+
+.AMLL-Player {
+    transform: scale(0.7);
+}
