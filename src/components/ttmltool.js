@@ -3,18 +3,16 @@ import React from 'react';
 const TTMLtool = () => {
   const iframeStyle = {
     width: '100%',
-    height: '70vh',
+    height: '100%',
     border: 'none', // Remove iframe border
   };
 
   return (
-    <div>
       <iframe
         title="TTML-Tool"
         src="https://steve-xmh.github.io/amll-ttml-tool/"
         style={iframeStyle}
       />
-    </div>
   );
 };
 
