@@ -9,7 +9,7 @@ function Localplay() {
     const [size, setSize] = useState();
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
-        setSize('default');
+        setSize('large');
         setOpen(true);
     };
     const onClose = () => {
@@ -122,6 +122,31 @@ function Localplay() {
             window.removeEventListener('playDataChanged', handleplayDataChange);
         };
     }, []); // 空数组表示只在组件挂载和卸载时运行
+    function getLines(line) {
+        // line1 是 EventTarget 对象
+        console.log("getLineEvent", line);
+        const line1 = line.line;
+        console.log("getTargetEvent", line1)
+        // 访问 line1 的 words 属性
+        const swords = line1.splittedWords;
+        // 打印 words 数组
+        console.log("getStartWord", swords);
+        const starttime = swords[0].startTime;
+        console.log("getStartTime", starttime);
+        setCurrentTime(starttime);
+        console.log("setCurrentTime", starttime);
+        // 获取 audio 元素
+        const saudio = document.getElementById('onAudio');
+        // 设置 audio 的当前播放时间为指定的秒数
+        const starttimeInSeconds = starttime / 1000;
+        saudio.currentTime = starttimeInSeconds;
+        // 开始播放 audio
+        saudio.play();
+        saudio.play().catch(error => {
+            // 处理播放被阻止的情况
+            console.error('播放被阻止:', error);
+        });
+    }
 
     return (
         <>
@@ -143,9 +168,9 @@ function Localplay() {
                         display: 'flex',
                     }}
                 >
-                {drawerContent}
-                <Divider />
-                <LyricPlayer lyricLines={lyricLines} currentTime={currentTime} style={{ backgroundColor: 'black', height: '20vh', width: "98%" }} />
+                    {drawerContent}
+                    <Divider />
+                    <LyricPlayer onLyricLineClick={(line) => getLines(line)} alignPosition="0.1" lyricLines={lyricLines} currentTime={currentTime} style={{ backgroundColor: 'grey', height: '60vh', width: "98%" }} />
                 </Space>
             </Drawer>
         </>
