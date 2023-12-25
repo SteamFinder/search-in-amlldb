@@ -107,6 +107,8 @@ function Localplay() {
                     // console.log(ttmlInput);
                     const parsedResult = parseTTML(ttmlInput);
                     setLyricLines(parsedResult)
+
+                    // 旧版 audio控件位于Drawer内部 新版 位于title
                     setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" controls autoPlay />);
 
                     setProgressPercent(60);
@@ -164,17 +166,17 @@ function Localplay() {
     }, []); // 空数组表示只在组件挂载和卸载时运行
     function getLines(line) {
         // line1 是 EventTarget 对象
-        console.log("getLineEvent", line);
+        // console.log("getLineEvent", line);
         const line1 = line.line;
-        console.log("getTargetEvent", line1)
+        // console.log("getTargetEvent", line1)
         // 访问 line1 的 words 属性
         const swords = line1.splittedWords;
         // 打印 words 数组
-        console.log("getStartWord", swords);
+        // console.log("getStartWord", swords);
         const starttime = swords[0].startTime;
-        console.log("getStartTime", starttime);
+        // console.log("getStartTime", starttime);
         setCurrentTime(starttime);
-        console.log("setCurrentTime", starttime);
+        // console.log("setCurrentTime", starttime);
         // 获取 audio 元素
         const saudio = document.getElementById('onAudio');
         // 设置 audio 的当前播放时间为指定的秒数
@@ -220,7 +222,7 @@ function Localplay() {
                     </span>
                 </Button>
             )}
-            <Drawer title="AMLL-React Player" placement="bottom" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
+            <Drawer title={drawerContent} placement="bottom" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
                 <LyricPlayer
                     onLyricLineClick={(line) => getLines(line)}
                     alignPosition="0.5" lyricLines={lyricLines}
@@ -235,7 +237,7 @@ function Localplay() {
                         display: 'flex',
                     }}
                 >
-                    {drawerContent}
+                    {/* {drawerContent} 旧版 */}
                 </Space>
             </Drawer>
         </>
