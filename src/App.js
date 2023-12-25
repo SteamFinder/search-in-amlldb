@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Localplay from "./components/localplay";
 import Localdb from "./components/localdb";
 import {
@@ -8,13 +8,18 @@ import {
   HomeOutlined,
   SearchOutlined,
   ToolOutlined,
-  PlayCircleOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, Button, theme, notification, Drawer } from 'antd';
 import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 const { Header, Sider, Content, Footer } = Layout;
 
 function App() {
+
+  // init Logo - Main
+  console.log('\n' + ' %c SearchInAMLLDB ' + ' %c React ' + '\n', 'color: #fff; background: #030307; padding:5px 0;', 'color: #fff; background: #1677ff; padding:5px 0;');
+  // init Logo - LocalPlay
+  console.log('\n' + ' %c LocalPlay ' + ' %c 基于AMLL-React实现 ' + '\n', 'color: #fff; background: #030307; padding:5px 0;', 'color: #fff; background: #2fd160; padding:5px 0;');
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -133,7 +138,7 @@ function App() {
               textAlign: 'center',
             }}
           >
-            Search In AMLL-DB@2.0.0 React
+            Search In AMLL-DB@2.1.0 React
           </Footer>
         </Layout>
       </Layout>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, message, Progress } from 'antd';
 
 function Localdb() {
+
     // 全局通知
     const [messageApi, contextHolder] = message.useMessage();
     const success = () => {
@@ -51,10 +52,10 @@ function Localdb() {
                     const promises = data.map(async file => {
                         const ttml_id = file.name.replace(/\.ttml$/, '');
                         const ttml_url = file.html_url;
-                        const ttml_downurl = file.download_url;
+                        const ttml_downurl = "https://mirror.ghproxy.com/" + file.download_url; //ghproxy 避免raw.gh被ban
                         const time_ver = new Date().toLocaleString();
 
-                        if( i == 0 ){ 
+                        if (i == 0) {
                             setProgressPercent(30);
                             setProgressHint("匹配歌曲信息");
                         }
@@ -65,7 +66,7 @@ function Localdb() {
                         const s_sname = data.songs[0].ar[0].name;
                         const s_pic = data.songs[0].al.picUrl;
 
-                        if( i == Math.ceil(maplength / 4) ){ 
+                        if (i == Math.ceil(maplength / 4)) {
                             setProgressPercent(50);
                             setProgressHint("匹配文件信息");
                         }
@@ -73,7 +74,7 @@ function Localdb() {
                         const response_1 = await fetch('https://autumnfish.cn/song/url/v1?id=' + ttml_id + '&level=standard');
                         const data_1 = await response_1.json();
 
-                        if( i == Math.ceil(maplength / 1.5) ){ 
+                        if (i == Math.ceil(maplength / 1.5)) {
                             setProgressPercent(70);
                             setProgressHint("处理数据");
                         }
@@ -81,7 +82,7 @@ function Localdb() {
                         // 部分无版权歌曲统一替换url
                         // console.log(i ,"获取歌曲url" , data_1.data[0].url)
                         if (data_1.data[0].url == null) {
-                            console.log(i ,"判断为null" , data_1.data[0].url)
+                            console.log(i, "判断为null", data_1.data[0].url)
                             data_1.data[0].url = 'http://www.baidu.com';
                         }
                         const s_downurl = data_1.data[0].url.replace(/^http:/, "https:");
@@ -132,23 +133,23 @@ function Localdb() {
             <Button type="text" onClick={() => updateData()} disabled={button_disabled}>数据库版本: {amll_ver} </Button>
             <Button type="primary" onClick={() => updateData()} disabled={button_disabled}> 更新</Button>
             {progressVisible && (
-            <Button type="text">
-                <Progress
-                    type="circle"
-                    trailColor="#e6f4ff"
-                    percent={progressPercent}
-                    strokeWidth={20}
-                    size={14}
-                    format={(number) => `进行中，已完成${number}%`}
-                />
-                <span
-                    style={{
-                        marginLeft: 8,
-                    }}
-                >
-                    {progressHint}
-                </span>
-            </Button>
+                <Button type="text">
+                    <Progress
+                        type="circle"
+                        trailColor="#e6f4ff"
+                        percent={progressPercent}
+                        strokeWidth={20}
+                        size={14}
+                        format={(number) => `进行中，已完成${number}%`}
+                    />
+                    <span
+                        style={{
+                            marginLeft: 8,
+                        }}
+                    >
+                        {progressHint}
+                    </span>
+                </Button>
             )}
         </>
     );

@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LyricPlayer } from "@applemusic-like-lyrics/react";
 import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
-import { PlayCircleOutlined } from '@ant-design/icons';
-import { Button, Drawer, Divider, Space } from 'antd';
+import { PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons';
+import { Button, Drawer, Divider, Space, Progress } from 'antd';
+import './localplay.css';
 
 function Localplay() {
+
+    // Progress
+    const [progressVisible, setProgressVisible] = useState(false);
+    const [progressPercent, setProgressPercent] = useState(0);
+    const [progressHint, setProgressHint] = useState("初始化");
+
     // AMLL Drawer
+    const [playing, setPlaying] = useState(false);
     const [size, setSize] = useState();
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
@@ -18,7 +26,6 @@ function Localplay() {
     };
 
     // 绑定 更新歌词/歌曲
-    const [s_url, setParsedLyrics] = useState("");
     const [currentTime, setCurrentTime] = useState(0);
     const [lyricLines, setLyricLines] = useState([]);
     const [drawerContent, setDrawerContent] = useState(<audio id="onAudio" controls />);
@@ -56,10 +63,23 @@ function Localplay() {
     useEffect(() => {
         const handleplayDataChange = () => {
             // 当 localStorage 发生变化时，更新组件的状态
+
+            // Progress
+            setProgressVisible(true);
+            setProgressPercent(10);
+            setProgressHint("获取歌曲信息");
+
+            //处理播放器图标
+            setPlaying(true);
+
             var upddata = [];
             var storedMusicDataString = localStorage.getItem('amllplay');
             const storedMusicData = JSON.parse(storedMusicDataString);
+
+            setProgressPercent(20);
+            setProgressHint("查询本地数据");
             console.log("storedMusicData:", storedMusicData);
+
             // 使用map生成React元素
             upddata.push({
                 key: storedMusicData.s_id,
@@ -71,7 +91,12 @@ function Localplay() {
                 ttml_downurl: storedMusicData.ttml_downurl,
             })
             playdata = upddata;
+
+            setProgressPercent(40);
+            setProgressHint("解析TTML");
+
             getAmllplayer();
+
             //处理 TTML歌词
             async function getAmllplayer() {
                 try {
@@ -82,7 +107,11 @@ function Localplay() {
                     // console.log(ttmlInput);
                     const parsedResult = parseTTML(ttmlInput);
                     setLyricLines(parsedResult)
-                    setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" controls />);
+                    setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" controls autoPlay />);
+
+                    setProgressPercent(60);
+                    setProgressHint("调用AMLL");
+
                     showDrawer();
                     executeInOrder();
                     // 使用 Promise.all 等待所有异步操作完成
@@ -94,8 +123,19 @@ function Localplay() {
                     console.error('处理TTML时出现错误:', error.message);
                 }
             }
+
+            // 逐帧调用AMLL
             function executeInOrder() {
+
+                setProgressPercent(100);
+                setProgressHint("完成");
+
+                function progressSuccess(){
+                    setProgressVisible(false);
+                }
+
                 setTimeout(reBuffer, 3000);
+                setTimeout(progressSuccess, 3000);
                 function reBuffer() {
                     const audio = document.getElementById("onAudio");
                     console.log(audio);
@@ -150,17 +190,44 @@ function Localplay() {
 
     return (
         <>
-            <Button
-                type="text"
-                icon={<PlayCircleOutlined />}
-                onClick={() => showDrawer()}
-                style={{
-                    fontSize: '16px',
-                    width: 64,
-                    height: 64,
-                }}
-            />
-            <Drawer title="AMLL-React Player" placement="bottom" onClose={onClose} open={open} mask={false} size={size}>
+            {!progressVisible && (
+                <Button
+                    type="text"
+                    icon={playing ? <PlayCircleTwoTone twoToneColor="#52c41a" /> : <PlayCircleOutlined />}
+                    onClick={() => showDrawer()}
+                    style={{
+                        fontSize: '16px',
+                        width: 64,
+                        height: 64,
+                    }}
+                />
+            )}
+            {progressVisible && (
+                <Button type="text">
+                    <Progress
+                        type="circle"
+                        trailColor="#e6f4ff"
+                        percent={progressPercent}
+                        strokeWidth={20}
+                        size={14}
+                        format={(number) => `进行中，已完成${number}%`}
+                    />
+                    <span
+                        style={{
+                            marginLeft: 8,
+                        }}
+                    >
+                        {progressHint}
+                    </span>
+                </Button>
+            )}
+            <Drawer title="AMLL-React Player" placement="bottom" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
+                <LyricPlayer
+                    onLyricLineClick={(line) => getLines(line)}
+                    alignPosition="0.3" lyricLines={lyricLines}
+                    currentTime={currentTime}
+                    style={{ position: 'absolute', top: 0, left: 0, width: '95%', height: '630px', backgroundColor: 'grey' }}
+                />
                 <Space
                     direction="vertical"
                     size="middle"
@@ -169,8 +236,6 @@ function Localplay() {
                     }}
                 >
                     {drawerContent}
-                    <Divider />
-                    <LyricPlayer onLyricLineClick={(line) => getLines(line)} alignPosition="0.1" lyricLines={lyricLines} currentTime={currentTime} style={{ backgroundColor: 'grey', height: '60vh', width: "98%" }} />
                 </Space>
             </Drawer>
         </>
