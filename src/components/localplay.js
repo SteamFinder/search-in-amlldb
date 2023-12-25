@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { LyricPlayer } from "@applemusic-like-lyrics/react";
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { LyricPlayer, BackgroundRender } from "@applemusic-like-lyrics/react";
 import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
 import { PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons';
 import { Button, Drawer, Divider, Space, Progress } from 'antd';
@@ -29,7 +29,10 @@ function Localplay() {
     const [currentTime, setCurrentTime] = useState(0);
     const [lyricLines, setLyricLines] = useState([]);
     const [drawerContent, setDrawerContent] = useState(<audio id="onAudio" controls />);
+    const [albumUrl, setAlbumUrl] = useState("");
+    const lyricPlayerRef = useRef(null);
     var playdata;
+    var picUrl;
 
     // Mute audio
     const audioRef = useRef(null);
@@ -132,12 +135,13 @@ function Localplay() {
                 setProgressPercent(100);
                 setProgressHint("完成");
 
-                function progressSuccess(){
+                function progressSuccess() {
                     setProgressVisible(false);
                 }
 
-                setTimeout(reBuffer, 3000);
-                setTimeout(progressSuccess, 3000);
+                setTimeout(reBuffer, 1000);
+                setTimeout(setBg, 1000);
+                setTimeout(progressSuccess, 1000);
                 function reBuffer() {
                     const audio = document.getElementById("onAudio");
                     console.log(audio);
@@ -154,6 +158,11 @@ function Localplay() {
                         requestAnimationFrame(frame);
                     };
                     requestAnimationFrame(frame);
+                }
+                function setBg(){
+                    picUrl = playdata[0].s_pic;
+                    console.log('setAlbumUrl:', picUrl);
+                    setAlbumUrl(picUrl);//bgRender
                 }
             }
         };
@@ -223,22 +232,26 @@ function Localplay() {
                 </Button>
             )}
             <Drawer title={drawerContent} placement="bottom" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
+                <BackgroundRender
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        contain: "paint layout",
+                        overflow: "hidden",
+                    }}
+                    albumImageUrl={albumUrl}
+                />
                 <LyricPlayer
                     onLyricLineClick={(line) => getLines(line)}
-                    alignPosition="0.5" lyricLines={lyricLines}
+                    alignPosition="0.5"
+                    lyricLines={lyricLines}
                     currentTime={currentTime}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '80%' , backgroundColor: 'grey' }}
-                    className="AMLL-Player"
+                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '80%' }}
+                    ref={lyricPlayerRef}
                 />
-                <Space
-                    direction="vertical"
-                    size="middle"
-                    style={{
-                        display: 'flex',
-                    }}
-                >
-                    {/* {drawerContent} 旧版 */}
-                </Space>
             </Drawer>
         </>
     );
