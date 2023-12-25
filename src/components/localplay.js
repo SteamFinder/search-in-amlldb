@@ -227,7 +227,7 @@ function Localplay() {
                     onLyricLineClick={(line) => getLines(line)}
                     alignPosition="0.5" lyricLines={lyricLines}
                     currentTime={currentTime}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '90%' , backgroundColor: 'grey' }}
+                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '80%' , backgroundColor: 'grey' }}
                     className="AMLL-Player"
                 />
                 <Space
