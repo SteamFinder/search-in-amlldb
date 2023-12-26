@@ -43,7 +43,7 @@ function Localdb() {
             // 获取数据
             // 从GithubAPI获取数据
             var amll_data = [];
-            fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/contents/lyrics')
+            fetch('https://mirror.ghproxy.com/https://api.github.com/repos/Steve-xmh/amll-ttml-db/contents/lyrics')
                 .then(response => response.json())
                 .then(data => {
                     var maplength = data.length;
