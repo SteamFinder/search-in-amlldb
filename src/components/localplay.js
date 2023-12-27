@@ -1,10 +1,14 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { LyricPlayer, BackgroundRender } from "@applemusic-like-lyrics/react";
+import { EplorRenderer } from '@applemusic-like-lyrics/core';
 import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
 import { PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons';
 import { Button, Drawer, Divider, Space, Progress } from 'antd';
 import './localplay.css';
 import './SF-D-M.ttf';
+
+//注意 目前amll在npm的仓库不是最新版 目前本项目的amll是dev分支手动覆盖的
+//影响 amll/core amll/react
 
 function Localplay() {
 
@@ -244,6 +248,7 @@ function Localplay() {
                         overflow: "hidden",
                     }}
                     albumImageUrl={albumUrl}
+                    renderer={EplorRenderer}
                 />
                 <LyricPlayer
                     onLyricLineClick={(line) => getLines(line)}
