@@ -22,7 +22,7 @@ function Localplay() {
     const [size, setSize] = useState();
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
-        setSize('default');
+        setSize('large');
         setOpen(true);
     };
     const onClose = () => {
@@ -236,7 +236,7 @@ function Localplay() {
                     </span>
                 </Button>
             )}
-            <Drawer title={drawerContent} placement="bottom" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
+            <Drawer title={drawerContent} placement="right" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
                 <BackgroundRender
                     style={{
                         position: 'absolute',
@@ -255,7 +255,15 @@ function Localplay() {
                     alignPosition="0.5"
                     lyricLines={lyricLines}
                     currentTime={currentTime}
-                    style={{ position: 'absolute', top: 0, left: 0, width: '90%', height: '80%' , fontFamily: 'SF Pro Display Medium, sans-serif'}}
+                    style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: 0, 
+                        width: '100%', 
+                        height: '100%' , 
+                        fontFamily: 'SF Pro Display Medium, sans-serif',
+                        overflow: "hidden",
+                    }}
                 />
             </Drawer>
         </>
