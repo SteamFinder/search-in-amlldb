@@ -1,4 +1,3 @@
-import './components/localplay.css';
 import React, { useState, useEffect } from 'react';
 import Localplay from "./components/localplay";
 import Localdb from "./components/localdb";
