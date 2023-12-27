@@ -1,9 +1,24 @@
 .playerDrawer .ant-drawer-body {
     background: grey;
     position: relative;
+    overflow: hidden !important;
 }
 
 /* .AMLL-Player {
     transform: scale(0.7);
     overflow: hidden;
+} */
+
+:root {
+    --amll-lyric-player-font-size: 3vh;
+    /* 设置AMLL LyricPlayer FontSize */
+}
+
+.lyricPlayer-0-1-10 {
+    padding: 0 !important;
+    /* 设置AMLL LyricPlayer padding 贴近Drawer */
+}
+
+/* .AMLL-Player-Drawer {
+    overflow: hidden !important;
 } */

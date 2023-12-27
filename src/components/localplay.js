@@ -34,7 +34,7 @@ function Localplay() {
     const [size, setSize] = useState();
     const [open, setOpen] = useState(false);
     const showDrawer = () => {
-        setSize('large');
+        setSize('default');
         setOpen(true);
     };
     const onClose = () => {
@@ -252,7 +252,18 @@ function Localplay() {
                     </span>
                 </Button>
             )}
-            <Drawer title={drawerContent} placement="right" onClose={onClose} open={open} mask={false} size={size} className="playerDrawer" style={{ position: 'relative' }}>
+            <Drawer title={drawerContent}
+                placement="right"
+                onClose={onClose}
+                open={open}
+                mask={false}
+                size={size}
+                className="playerDrawer"
+                style={{
+                    position: 'relative',
+                    // overflow: "hidden",
+                }}
+            >
                 <BackgroundRender
                     style={{
                         position: 'absolute',
@@ -268,17 +279,18 @@ function Localplay() {
                 />
                 <LyricPlayer
                     onLyricLineClick={(line) => getLines(line)}
-                    alignPosition="0.5"
+                    alignPosition="0.4"
                     lyricLines={lyricLines}
                     currentTime={currentTime}
                     style={{
                         position: 'absolute',
                         top: 0,
                         left: 0,
-                        width: '100%',
-                        height: '100%',
+                        width: '115%',
+                        height: '110%',
                         fontFamily: 'SF Pro Display Medium, sans-serif',
                         overflow: "hidden",
+                        // fontSize: "var(--amll-lyric-player-font-size,max(min(5vh, 10vw),12px));",
                     }}
                 />
             </Drawer>
