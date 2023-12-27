@@ -3,7 +3,7 @@ import { LyricPlayer, BackgroundRender } from "@applemusic-like-lyrics/react";
 import { EplorRenderer } from '@applemusic-like-lyrics/core';
 import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
 import { PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons';
-import { Button, Drawer, Divider, Space, Progress } from 'antd';
+import { Button, Drawer, Divider, Space, Progress, notification } from 'antd';
 import './localplay.css';
 import './SF-D-M.ttf';
 
@@ -11,6 +11,18 @@ import './SF-D-M.ttf';
 //影响 amll/core amll/react
 
 function Localplay() {
+
+    // notification when no s_url
+    const [api, contextHolder] = notification.useNotification();
+    const openNotification = (placement) => {
+        api.error({
+            message: '错误',
+            description:
+                '该歌曲可能为VIP歌曲或网易云版权失效',
+            duration: 5,
+            placement,
+        });
+    };
 
     // Progress
     const [progressVisible, setProgressVisible] = useState(false);
@@ -117,6 +129,9 @@ function Localplay() {
                     setLyricLines(parsedResult)
 
                     // 旧版 audio控件位于Drawer内部 新版 位于title
+                    if (playdata[0].s_downurl == "https://www.baidu.com") {
+                        openNotification('topLeft');
+                    }
                     setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" controls autoPlay />);
 
                     setProgressPercent(60);
@@ -164,7 +179,7 @@ function Localplay() {
                     };
                     requestAnimationFrame(frame);
                 }
-                function setBg(){
+                function setBg() {
                     picUrl = playdata[0].s_pic;
                     console.log('setAlbumUrl:', picUrl);
                     setAlbumUrl(picUrl);//bgRender
@@ -205,6 +220,7 @@ function Localplay() {
     }
     return (
         <>
+            {contextHolder}
             {!progressVisible && (
                 <Button
                     type="text"
@@ -255,12 +271,12 @@ function Localplay() {
                     alignPosition="0.5"
                     lyricLines={lyricLines}
                     currentTime={currentTime}
-                    style={{ 
-                        position: 'absolute', 
-                        top: 0, 
-                        left: 0, 
-                        width: '100%', 
-                        height: '100%' , 
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
                         fontFamily: 'SF Pro Display Medium, sans-serif',
                         overflow: "hidden",
                     }}
