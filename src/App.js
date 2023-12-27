@@ -16,9 +16,9 @@ const { Header, Sider, Content, Footer } = Layout;
 function App() {
 
   // init Logo - Main
-  console.log('\n' + ' %c SearchInAMLLDB ' + ' %c React ' + '\n', 'color: #fff; background: #030307; padding:5px 0;', 'color: #fff; background: #1677ff; padding:5px 0;');
+  // console.log('\n' + ' %c SearchInAMLLDB ' + ' %c React ' + '\n', 'color: #fff; background: #030307; padding:5px 0;', 'color: #fff; background: #1677ff; padding:5px 0;');
   // init Logo - LocalPlay
-  console.log('\n' + ' %c LocalPlay ' + ' %c 基于AMLL-React实现 ' + '\n', 'color: #fff; background: #030307; padding:5px 0;', 'color: #fff; background: #2fd160; padding:5px 0;');
+  // console.log('\n' + ' %c LocalPlay ' + ' %c 基于AMLL-React实现 ' + '\n', 'color: #fff; background: #030307; padding:5px 0;', 'color: #fff; background: #2fd160; padding:5px 0;');
 
   const [collapsed, setCollapsed] = useState(false);
   const {
