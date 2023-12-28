@@ -21,8 +21,8 @@ function Cookiemain() {
     return (
         <>
             <Alert
-                type="warning"
-                message="您正位于开发者选项页面, 不建议用户自行设置"
+                type="info"
+                message="请先点击getQR获取二维码进行登录 然后点击数据库更新(Devs)的更新按钮进行更新 如您有会员 试听歌曲将会被解锁"
                 banner
                 showIcon
             />

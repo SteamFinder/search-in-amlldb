@@ -231,11 +231,13 @@ function Cookiedb() {
                 </Button>
             )}
             <Divider />
-            <Input placeholder="API URL 请加入协议头" onChange={(e) => setInputValue(e.target.value)} />
+            <Input placeholder="API URL 请加入协议头 (本设置暂时无效)" onChange={(e) => setInputValue(e.target.value)} />
             <Divider />
             <Button type="primary" onClick={handleSet} disabled={button_disabled}>设置api</Button>
             <Divider />
-            此处更新的Devs数据库版本将不会在顶部工具栏显示, 但是数据库仍有效
+            此处更新的Devs数据库版本将不会在顶部工具栏显示, 但是数据库仍有效<br />
+            此处的更新功能将会使用您的账号进行数据拉取<br />
+            如果您有会员 试听歌曲会被解锁完整版
         </>
     );
 }
