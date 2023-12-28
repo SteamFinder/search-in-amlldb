@@ -60,7 +60,7 @@ function Localdb() {
                             setProgressHint("匹配歌曲信息");
                         }
                         // 从网易云API获取数据
-                        const response = await fetch('https://autumnfish.cn/song/detail?ids=' + ttml_id);
+                        const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id);
                         const data = await response.json();
                         const s_name = data.songs[0].name;
                         const s_sname = data.songs[0].ar[0].name;
@@ -71,7 +71,7 @@ function Localdb() {
                             setProgressHint("匹配文件信息");
                         }
 
-                        const response_1 = await fetch('https://autumnfish.cn/song/url/v1?id=' + ttml_id + '&level=standard');
+                        const response_1 = await fetch('https://163.ink2link.cn/song/url/v1?id=' + ttml_id + '&level=standard');
                         const data_1 = await response_1.json();
 
                         if (i == Math.ceil(maplength / 1.5)) {

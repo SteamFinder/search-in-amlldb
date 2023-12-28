@@ -44,22 +44,6 @@ function Cookiedb() {
     // var unCookie = localStorage.getItem('cookie');
     var amll_time_ver;
 
-    // console.log("unCookie", unCookie);
-    // function getCookieValue(cookieString, cookieName) {
-    //     const cookiePairs = cookieString.split(';');
-
-    //     for (const pair of cookiePairs) {
-    //         const [key, value] = pair.trim().split('=');
-
-    //         if (key === cookieName) {
-    //             return value;
-    //         }
-    //     }
-
-    //     // 如果找不到对应的 cookie，则返回 null
-    //     return null;
-    // }
-
     if (storedMusicDataString == null) {
         //本地无数据时,使用.
         storedMusicDataString = "{\"time_ver\":\"(Devs)本地无数据\"}";
@@ -79,15 +63,6 @@ function Cookiedb() {
         const localcookie = localStorage.getItem('cookie');
         const cookie = localStorage.getItem('cookie');
         // const cookie = getCookieValue(localcookie, 'MUSIC_U');
-
-        const requestOptions = {
-            method: 'GET',
-            headers: {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-                'Cookie': localcookie,
-            },
-            credentials: 'include', // 包括凭据（cookie）
-        };
 
         function fetchData() {
             //禁用button
@@ -131,7 +106,7 @@ function Cookiedb() {
                             setProgressHint("(Devs)匹配歌曲信息");
                         }
                         // 从网易云API获取数据
-                        const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id, requestOptions);
+                        const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id);
                         const data = await response.json();
                         const s_name = data.songs[0].name;
                         const s_sname = data.songs[0].ar[0].name;
