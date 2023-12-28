@@ -41,18 +41,18 @@ function Cookiemain() {
                 </Col>
                 <Col span={3}></Col>
             </Row>
-            <Row justify="center" gutter={{ xs: 8, sm: 16, md: 24, lg: 32, }}>
+            <Row justify="center" gutter={{ xs: 4, sm: 8, md: 12, lg: 16, }}>
                 <br />
                 <br />
             </Row>
-            <Row justify="center" gutter={{ xs: 8, sm: 16, md: 24, lg: 32, }}>
-                <Col span={3}></Col>
-                <Col span={6}>
+            <Row justify="center" gutter={{ xs: 4, sm: 8, md: 12, lg: 16, }}>
+                <Col span={1}></Col>
+                <Col span={8}>
                     <Card title="数据库更新(Devs)" hoverable="true">
                         <Cookiedb />
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col span={8}>
                     <Card title="QR Login" hoverable="true">
                         <Cookieget />
                     </Card>
@@ -62,7 +62,7 @@ function Cookiemain() {
                         <Cookieuser />
                     </Card>
                 </Col>
-                <Col span={3}></Col>
+                <Col span={1}></Col>
             </Row>
         </>
     );
