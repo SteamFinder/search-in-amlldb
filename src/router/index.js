@@ -3,6 +3,7 @@ import Search from "../components/search";
 import Database from "../components/database";
 import TTMLtool from "../components/ttmltool";
 import Error from "../components/error";
+import Cookiemain from "../components/cookiemain"
 import App from "../App"
 import { createBrowserRouter } from "react-router-dom";
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter(
                 {
                     path: '/search-in-amlldb/ttml-tool',
                     element: <TTMLtool />
+                },
+                {
+                    path: '/search-in-amlldb/devs',
+                    element: <Cookiemain />
                 }
             ]
         },

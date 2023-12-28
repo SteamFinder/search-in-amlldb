@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Localplay from "./components/localplay";
 import Localdb from "./components/localdb";
+import { UserSwitchOutlined } from '@ant-design/icons';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -98,6 +99,11 @@ function App() {
                 key: '/search-in-amlldb/ttml-tool',
                 icon: <ToolOutlined />,
                 label: 'TTML工具',
+              },
+              {
+                key: '/search-in-amlldb/devs',
+                icon: <UserSwitchOutlined />,
+                label: '开发者选项',
               },
             ]}
             onClick={onMenuClick}
