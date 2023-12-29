@@ -41,11 +41,16 @@ function Localplay() {
         setOpen(false);
         pauseAudio();
     };
+    const classNames = {
+        header: 'css-drawer-header',
+        footer: 'css-drawer-footer',
+    };
 
     // 绑定 更新歌词/歌曲
     const [currentTime, setCurrentTime] = useState(0);
     const [lyricLines, setLyricLines] = useState([]);
-    const [drawerContent, setDrawerContent] = useState(<audio id="onAudio" controls />);
+    const [drawerContent, setDrawerContent] = useState(<audio id="onAudio" controls className="onAudio" />);
+    const [drawerFooter, setDrawerFooter ] = useState("");
     const [albumUrl, setAlbumUrl] = useState("");
     // const lyricPlayerRef = useRef(null);
     var playdata;
@@ -132,7 +137,8 @@ function Localplay() {
                     if (playdata[0].s_downurl == "https://www.baidu.com") {
                         openNotification('topLeft');
                     }
-                    setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" controls autoPlay />);
+                    setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" className="onAudio" controls autoPlay />);
+                    setDrawerFooter(playdata[0].s_name + " - " + playdata[0].s_sname);
 
                     setProgressPercent(60);
                     setProgressHint("调用AMLL");
@@ -263,6 +269,8 @@ function Localplay() {
                     position: 'relative',
                     // overflow: "hidden",
                 }}
+                classNames={classNames}
+                footer={drawerFooter}
             >
                 <BackgroundRender
                     style={{

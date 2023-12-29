@@ -144,7 +144,7 @@ function App() {
               textAlign: 'center',
             }}
           >
-            Search In AMLL-DB@主版本 <b>11.1.0</b>
+            Search In AMLL-DB@主版本 <b>11.2.0</b>
           </Footer>
         </Layout>
       </Layout>

@@ -27,3 +27,11 @@
 /* .AMLL-Player-Drawer {
     overflow: hidden !important;
 } */
+
+.css-drawer-header {
+    height: 6vh;
+}
+
+.onAudio {
+    display: block;
+}

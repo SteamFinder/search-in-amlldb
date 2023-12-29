@@ -1,6 +1,6 @@
 {
   "name": "search-in-amlldb",
-  "version": "11.1.0",
+  "version": "11.2.0",
   "homepage": "https://steamfinder.github.io/search-in-amlldb",
   "private": true,
   "dependencies": {
