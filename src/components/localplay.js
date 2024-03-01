@@ -188,7 +188,9 @@ function Localplay() {
                 function setBg() {
                     picUrl = playdata[0].s_pic;
                     console.log('setAlbumUrl:', picUrl);
-                    setAlbumUrl(picUrl);//bgRender
+                    var albumImage = new Image(100, 100);
+                    albumImage.src = picUrl;
+                    setAlbumUrl(albumImage);//bgRender
                 }
             }
         };
@@ -282,7 +284,7 @@ function Localplay() {
                         contain: "paint layout",
                         overflow: "hidden",
                     }}
-                    albumImageUrl={albumUrl}
+                    album={albumUrl}
                     renderer={EplorRenderer}
                 />
                 <LyricPlayer

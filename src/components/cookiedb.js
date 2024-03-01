@@ -55,6 +55,7 @@ function Cookiedb() {
         amll_time_ver = storedMusicData[0].time_ver
     }
     const [amll_ver, setAmllver] = useState(amll_time_ver);
+    const [db_count, setDbCount] = useState(0);
     const [button_disabled, setButtondisabled] = useState(false);
 
     const updateData = () => {
@@ -94,7 +95,10 @@ function Cookiedb() {
                     var maplength = data.length;
                     var i = 0;
                     // 使用 Promise.all 等待所有异步请求完成
-                    const promises = data.map(async file => {
+                    // 修改获取逻辑 只获取ncm-lyrics/ttml的id
+                    const filesName = data;
+                    const ttmlFilesInfo = filesName.filter(fileName => fileName.name.endsWith('.ttml'));
+                    const promises = ttmlFilesInfo.map(async file => {
                         const ttml_id = file.name.replace(/\.ttml$/, '');
                         const ttml_url = file.html_url;
                         const ttml_downurl = "https://mirror.ghproxy.com/" + file.download_url; //ghproxy 避免raw.gh被ban
@@ -160,8 +164,9 @@ function Cookiedb() {
                             // 3. 从本地存储获取数据
                             storedMusicDataString = localStorage.getItem('amlldata');
                             storedMusicData = JSON.parse(storedMusicDataString);
-                            // 4. 更新状态
+                            // 4. 更新状态 +歌词总数
                             setAmllver(storedMusicData[0]?.time_ver);
+                            setDbCount(storedMusicData.length);
 
                             setProgressPercent(90);
                             setProgressHint("(Devs)更新视图");
@@ -184,7 +189,7 @@ function Cookiedb() {
     return (
         <>
             {contextHolder}
-            <Button type="text" onClick={() => updateData()} disabled={button_disabled}>数据库版本: {amll_ver} </Button>
+            <Button type="text" onClick={() => updateData()} disabled={button_disabled}>数据库版本: {amll_ver} &nbsp; 歌词数: {db_count}</Button>
             <Button type="primary" onClick={() => updateData()} disabled={button_disabled}> 更新</Button>
             {progressVisible && (
                 <Button type="text">
