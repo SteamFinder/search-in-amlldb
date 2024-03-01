@@ -190,6 +190,7 @@ function Localplay() {
                     console.log('setAlbumUrl:', picUrl);
                     var albumImage = new Image();
                     albumImage.src = picUrl;
+                    // albumImage.src = '/test.jpg';
                     setAlbumUrl(albumImage);//bgRender
                 }
             }
