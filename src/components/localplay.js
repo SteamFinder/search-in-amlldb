@@ -188,7 +188,7 @@ function Localplay() {
                 function setBg() {
                     picUrl = playdata[0].s_pic;
                     console.log('setAlbumUrl:', picUrl);
-                    var albumImage = new Image(100, 100);
+                    var albumImage = new Image();
                     albumImage.src = picUrl;
                     setAlbumUrl(albumImage);//bgRender
                 }
