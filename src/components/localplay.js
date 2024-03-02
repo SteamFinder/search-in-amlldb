@@ -191,6 +191,8 @@ function Localplay() {
                     var albumImage = new Image();
                     albumImage.src = picUrl;
                     // albumImage.src = '/test.jpg';
+                    // 解决跨域问题
+                    albumImage.setAttribute('crossOrigin', '');
                     setAlbumUrl(albumImage);//bgRender
                 }
             }

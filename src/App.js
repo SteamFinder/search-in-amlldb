@@ -144,7 +144,7 @@ function App() {
               textAlign: 'center',
             }}
           >
-            Search In AMLL-DB@主版本 <b>3.1.0</b>
+            Search In AMLL-DB <b>20.3.11</b> @AMLL 3.1.0, React 0.1.5, Core 0.1.3
           </Footer>
         </Layout>
       </Layout>

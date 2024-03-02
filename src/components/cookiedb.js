@@ -89,7 +89,7 @@ function Cookiedb() {
                 // document.querySelector('#info').innerText = JSON.stringify(res.data, null, 2)
 
             }
-            fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/contents/lyrics')
+            fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/contents/ncm-lyrics')
                 .then(response => response.json())
                 .then(data => {
                     var maplength = data.length;
