@@ -66,12 +66,9 @@ function Localdb() {
                         // 从网易云API获取数据
                         const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id);
                         const data = await response.json();
-                        if( !data.songs[0].name ){ data.songs[0].name = "NO_NAME" }
-                        if( !data.songs[0].ar[0].name ){ data.songs[0].ar[0].name = "NO_AR_NAME" }
-                        if( !data.songs[0].al.picUrl ){ data.songs[0].al.picUrl = "N0_PIC_URL" }
-                        const s_name = data.songs[0].name;
-                        const s_sname = data.songs[0].ar[0].name;
-                        const s_pic = data.songs[0].al.picUrl;
+                        const s_name = data?.songs?.[0]?.name;
+                        const s_sname = data?.songs?.[0]?.ar[0].name;
+                        const s_pic = data?.songs?.[0]?.al.picUrl;
 
                         if (i == Math.ceil(maplength / 4)) {
                             setProgressPercent(50);
