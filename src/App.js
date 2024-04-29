@@ -60,6 +60,10 @@ function App() {
       console.log("用户UA 检测");
       var UAstatus = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       console.log("用户UA 是否移动端", UAstatus);
+      if(UAstatus == true){
+        var root = document.documentElement; // 获取根元素
+        root.style.setProperty("--amll-lyric-player-font-size", "5vh"); // 设置CSS变量        
+      }
       if (UAstatus == true && i == 0) {
         console.log("用户UA 移动端 进行提示");
         openNotification();
