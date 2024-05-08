@@ -12,10 +12,12 @@ function Cookiedb() {
                 <Button type="primary" onClick={handleSearch} disabled={button_disabled}>查询</Button>
     */
     const [inputValue, setInputValue] = useState('');
+    const [ApiUrl, setApiUrl] = useState('https://163.ink2link.cn');
     var setApi;
 
     function handleSet() {
         setApi = inputValue;
+        setApiUrl(setApi);
         openSuccess();
     }
 
@@ -78,7 +80,7 @@ function Cookiedb() {
             async function getLoginStatus(cookie = '') {
                 const res = await axios({
                     // url: `https://163.ink2link.cn/login/status?timestamp=${Date.now()}`,1901371647
-                    url: `https://163.ink2link.cn/song/url/v1?id=1901371647&level=standard`,
+                    url: ApiUrl + `/song/url/v1?id=1901371647&level=standard`,
                     method: 'post',
                     data: {
                         cookie,
@@ -89,19 +91,21 @@ function Cookiedb() {
                 // document.querySelector('#info').innerText = JSON.stringify(res.data, null, 2)
 
             }
-            fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/contents/ncm-lyrics')
-                .then(response => response.json())
+            fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/git/trees/main?recursive=1')
+                .then(res => res.json())
                 .then(data => {
                     var maplength = data.length;
                     var i = 0;
-                    // 使用 Promise.all 等待所有异步请求完成
-                    // 修改获取逻辑 只获取ncm-lyrics/ttml的id
-                    const filesName = data;
-                    const ttmlFilesInfo = filesName.filter(fileName => fileName.name.endsWith('.ttml'));
-                    const promises = ttmlFilesInfo.map(async file => {
-                        const ttml_id = file.name.replace(/\.ttml$/, '');
-                        const ttml_url = file.html_url;
-                        const ttml_downurl = "https://mirror.ghproxy.com/" + file.download_url; //ghproxy 避免raw.gh被ban
+                    const tree = data.tree;
+                    // 过滤出需要的文件
+                    const ttmlFiles = tree.filter(file => file.path.endsWith('.ttml') && file.path.startsWith('ncm-lyrics/'));
+                    // 输出id
+                    const promises = ttmlFiles.map(async file => {
+                        const fileName = file.path.split('/')[1];  // 获取文件名
+                        const ttmlid = fileName.split('.')[0];  // 移除扩展名
+                        const ttml_id = ttmlid;
+                        const ttml_url = 'https://github.com/Steve-xmh/amll-ttml-db/blob/main/ncm-lyrics/' + ttmlid + '.ttml';
+                        const ttml_downurl = "https://mirror.ghproxy.com/" + 'https://raw.githubusercontent.com/Steve-xmh/amll-ttml-db/main/ncm-lyrics/' + ttmlid + '.ttml'; //ghproxy 避免raw.gh被ban
                         const time_ver_t = new Date().toLocaleString();
                         const time_ver = time_ver_t + " Devs";
 
@@ -110,11 +114,11 @@ function Cookiedb() {
                             setProgressHint("(Devs)匹配歌曲信息");
                         }
                         // 从网易云API获取数据
-                        const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id);
+                        const response = await fetch(ApiUrl + '/song/detail?ids=' + ttml_id);
                         const data = await response.json();
-                        const s_name = data.songs[0].name;
-                        const s_sname = data.songs[0].ar[0].name;
-                        const s_pic = data.songs[0].al.picUrl;
+                        const s_name = data?.songs?.[0]?.name;
+                        const s_sname = data?.songs?.[0]?.ar[0].name;
+                        const s_pic = data?.songs?.[0]?.al.picUrl;
 
                         if (i == Math.ceil(maplength / 4)) {
                             setProgressPercent(50);
@@ -123,7 +127,7 @@ function Cookiedb() {
 
                         const res = await axios({
                             // url: `https://163.ink2link.cn/login/status?timestamp=${Date.now()}`,1901371647
-                            url: `https://163.ink2link.cn/song/url/v1?id=` + ttml_id + `&level=standard`,
+                            url: ApiUrl + `/song/url/v1?id=` + ttml_id + `&level=standard`,
                             method: 'post',
                             data: {
                                 cookie,
@@ -138,7 +142,7 @@ function Cookiedb() {
 
                         // 部分无版权歌曲统一替换url
                         // console.log(i ,"获取歌曲url" , data_1.data[0].url)
-                        console.log("注意", res.data);
+                        // console.log("注意", res.data);
                         if (data_1.data[0].url == null) {
                             console.log(i, "(Devs)歌曲url错误,可能为VIP歌曲或版权失效", data_1.data[0].url)
                             data_1.data[0].url = 'http://www.baidu.com';
@@ -181,7 +185,7 @@ function Cookiedb() {
                             console.log("(Devs)更新数据库完成:");
                             console.log(amll_data);
                         });
-                });
+                }).catch(err => console.error(err));
         }
         fetchData();
     }
@@ -211,7 +215,7 @@ function Cookiedb() {
                 </Button>
             )}
             <Divider />
-            <Input placeholder="API URL 请加入协议头 (本设置暂时无效)" onChange={(e) => setInputValue(e.target.value)} />
+            <Input placeholder="自定义163api地址 请加入协议头 如https://" onChange={(e) => setInputValue(e.target.value)} />
             <Divider />
             <Button type="primary" onClick={handleSet} disabled={button_disabled}>设置api</Button>
             <Divider />

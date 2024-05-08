@@ -43,29 +43,27 @@ function Main() {
                 <br />
             </Row>
             <Row justify="center" gutter={{ xs: 8, sm: 16, md: 24, lg: 32, }}>
-                <Col span={3}></Col>
-                <Col span={6}>
+                <Col span={8}>
                     <Card title="音乐搜索" hoverable="true">
                         <GithubOutlined />&nbsp;从AMLL DB获取数据<br />
                         <CloudSyncOutlined />&nbsp;支持网易云匹配<br />
                         <SearchOutlined />&nbsp;模糊搜索
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col span={8}>
                     <Card title="歌曲资源" hoverable="true">
                         <PlayCircleOutlined />&nbsp;纯音乐试听<br />
                         <DownloadOutlined />&nbsp;TTML/歌曲封面/音乐文件<br />
                         <LinkOutlined />&nbsp;快捷链接跳转
                     </Card>
                 </Col>
-                <Col span={6}>
+                <Col span={8}>
                     <Card title="TTML歌词" hoverable="true">
                         <DeploymentUnitOutlined />&nbsp;提供一站式服务<br />
                         <AppleOutlined />&nbsp;AMLL Player驱动歌词显示<br />
                         <FileTextOutlined />&nbsp;搜索/下载/编辑/预览 All in One
                     </Card>
                 </Col>
-                <Col span={3}></Col>
             </Row>
         </>
     );
