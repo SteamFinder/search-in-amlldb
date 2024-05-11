@@ -19,11 +19,13 @@
     "@testing-library/user-event": "^13.2.1",
     "antd": "^5.12.4",
     "axios": "^1.6.2",
+    "jotai": "^2.8.0",
     "jss": "^10.10.0",
     "jss-preset-default": "^10.10.0",
     "react": "^18.2.0",
     "react-aplayer": "^1.0.0",
     "react-dom": "^18.2.0",
+    "react-media": "^1.10.0",
     "react-router-dom": "^6.21.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.0"

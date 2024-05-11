@@ -1,8 +1,14 @@
 import React from 'react';
+import { Alert } from 'antd';
 
 function Error() {
     return (
-        <h1>ERROR</h1>
+        <Alert
+            message="错误"
+            description="未知的路由项, 请检查您的URL路径"
+            type="error"
+            showIcon
+        />
     );
 }
 

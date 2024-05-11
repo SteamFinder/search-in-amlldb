@@ -1,9 +1,9 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { LyricPlayer, BackgroundRender } from "@applemusic-like-lyrics/react";
 import { EplorRenderer } from '@applemusic-like-lyrics/core';
 import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
 import { PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons';
-import { Button, Drawer, Divider, Space, Progress, notification } from 'antd';
+import { Button, Drawer, Progress, notification } from 'antd';
 import './localplay.css';
 import './SF-D-M.ttf';
 

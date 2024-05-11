@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
-import { Button, message, Progress } from 'antd';
+import { Button, message, Progress, Drawer, Divider, Timeline } from 'antd';
+import { CloudSyncOutlined, SmileOutlined } from '@ant-design/icons';
 
 function Localdb() {
+
+    // 重构后的更新按钮收纳到Drawer里
+    const [open, setOpen] = useState(false);
+    const showDrawer = () => {
+        setOpen(true);
+    };
+    const onClose = () => {
+        setOpen(false);
+    };
 
     // 全局通知
     const [messageApi, contextHolder] = message.useMessage();
@@ -138,27 +148,75 @@ function Localdb() {
     return (
         <>
             {contextHolder}
-            <Button type="text" onClick={() => updateData()} disabled={button_disabled}>数据库版本: {amll_ver} &nbsp; 歌词数: {db_count}</Button>
-            <Button type="primary" onClick={() => updateData()} disabled={button_disabled}> 更新</Button>
-            {progressVisible && (
-                <Button type="text">
-                    <Progress
-                        type="circle"
-                        trailColor="#e6f4ff"
-                        percent={progressPercent}
-                        strokeWidth={20}
-                        size={14}
-                        format={(number) => `进行中，已完成${number}%`}
-                    />
-                    <span
-                        style={{
-                            marginLeft: 8,
-                        }}
-                    >
-                        {progressHint}
-                    </span>
-                </Button>
-            )}
+            <Button
+                type="text"
+                icon={<CloudSyncOutlined />}
+                onClick={showDrawer}
+                style={{
+                    fontSize: '16px',
+                    width: 64,
+                    height: 64,
+                }}
+            />
+            <Drawer title="数据库更新" onClose={onClose} open={open}>
+                <Button type="text" onClick={() => updateData()} disabled={button_disabled}>数据库版本: {amll_ver} &nbsp; 歌词数: {db_count}</Button>
+                <br />
+                <Button type="primary" onClick={() => updateData()} disabled={button_disabled} block> 更新</Button>
+                {progressVisible && (
+                    <Button type="text" block>
+                        <Progress
+                            type="circle"
+                            trailColor="#e6f4ff"
+                            percent={progressPercent}
+                            strokeWidth={20}
+                            size={14}
+                            format={(number) => `进行中，已完成${number}%`}
+                        />
+                        <span
+                            style={{
+                                marginLeft: 8,
+                            }}
+                        >
+                            {progressHint}
+                        </span>
+                    </Button>
+                )}
+                <Divider orientation="left" plain>
+                    Search In AMLL DB 更新日志
+                </Divider>
+                <Timeline
+                    items={[
+                        {
+                            color: 'green',
+                            children: (
+                                <>
+                                    <p><b>22.0.0</b> - 2024/5/11</p>
+                                    <p>AMLL 3.1.0, React 0.1.5, Core 0.1.3</p>
+                                    <p> - Add     player and test area</p>
+                                    <p> - Update  database button's style</p>
+                                    <p> - Prepare mobile devices optimization</p>
+                                </>
+                            ),
+                        },
+                        {
+                            color: 'gray',
+                            children: (
+                                <>
+                                    <p><b>21.0.0</b> - 2024/5/7</p>
+                                    <p>AMLL 3.1.0, React 0.1.5, Core 0.1.3</p>
+                                    <p> - Fix github api limits</p>
+                                    <p> - Add 163api setting</p>
+                                </>
+                            ),
+                        },
+                        {
+                            color: '#00CCFF',
+                            dot: <SmileOutlined />,
+                            children: <p>Old updating logs are unavailable.</p>,
+                        },
+                    ]}
+                />
+            </Drawer>
         </>
     );
 }
