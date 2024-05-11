@@ -4,6 +4,8 @@ import { EplorRenderer } from '@applemusic-like-lyrics/core';
 import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
 // import { parseTTML } from '../amll-dev-src/packages/bncm/src'
 import { Alert } from 'antd';
+import './SF-D-M.ttf';
+import './PF-M.ttf';
 
 function Play() {
     var picUrl;
@@ -81,7 +83,7 @@ function Play() {
     }
     return (
         <>
-            <audio id="AMLLPlayer" controls className="AMLLPlayer" src="https://m8.music.126.net/20240511192651/8257aab5c9780f0b75e306da21f4c236/ymusic/b346/23de/5e90/3c2f22e190b784d84adc1b6c3ebcaf35.mp3" />
+            <audio id="AMLLPlayer" controls className="AMLLPlayer" src="https://ink2link.cn/b346_23de_5e90_3c2f22e190b784d84adc1b6c3ebcaf35.mp3" />
             <Alert
                 message="Play"
                 description="This is play page."
@@ -91,10 +93,9 @@ function Play() {
             <BackgroundRender
                 style={{
                     position: 'absolute',
-                    top: 100,
-                    left: 100,
-                    width: '80%',
-                    height: '80%',
+                    top: 80,
+                    width: '100%',
+                    height: '90%',
                     contain: "paint layout",
                     overflow: "hidden",
                 }}
@@ -103,16 +104,15 @@ function Play() {
             />
             <LyricPlayer
                 onLyricLineClick={(line) => getLines(line)}
-                alignPosition="0.4"
+                alignPosition="0.2"
                 lyricLines={lyricLines}
                 currentTime={currentTime}
                 style={{
                     position: 'absolute',
-                    top: 100,
-                    left: 100,
-                    width: '80%',
-                    height: '80%',
-                    fontFamily: 'SF Pro Display Medium, sans-serif',
+                    top: 80,
+                    width: '100%',
+                    height: '90%',
+                    fontFamily: 'SF Pro Display Medium, PingFang Medium, sans-serif',
                     overflow: "hidden",
                     // fontSize: "var(--amll-lyric-player-font-size,max(min(5vh, 10vw),12px));",
                 }}

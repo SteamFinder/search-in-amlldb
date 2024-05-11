@@ -117,7 +117,7 @@ function App() {
                 label: '播放器(beta)',
               },
               {
-                key: '/search-in-amlldb/test',
+                key: '/search-in-amlldb/play',
                 icon: <FireOutlined />,
                 label: '测试区',
               },
