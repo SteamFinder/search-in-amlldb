@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, message, Progress, Drawer, Divider, Timeline } from 'antd';
 import { CloudSyncOutlined, SmileOutlined } from '@ant-design/icons';
 
@@ -22,28 +22,34 @@ function Localdb() {
         });
     };
 
-    // Progress
+    // Progress + useState
     const [progressVisible, setProgressVisible] = useState(false);
     const [progressPercent, setProgressPercent] = useState(0);
     const [progressHint, setProgressHint] = useState("初始化");
-
-    var storedMusicDataString = localStorage.getItem('amlldata');
-    var amll_time_ver;
-    var db_length_count;
-    if (storedMusicDataString == null) {
-        //本地无数据时,使用.
-        storedMusicDataString = "{\"time_ver\":\"本地无数据\"}";
-        var storedMusicData = JSON.parse(storedMusicDataString);
-        amll_time_ver = storedMusicData.time_ver
-    } else {
-        //本地有数据时,使用[0]查询第一个数据的ver
-        storedMusicData = JSON.parse(storedMusicDataString);
-        amll_time_ver = storedMusicData[0].time_ver;
-        db_length_count = storedMusicData.length;
-    }
-    const [amll_ver, setAmllver] = useState(amll_time_ver);
-    const [db_count, setDbCount] = useState(db_length_count);
+    const [amll_ver, setAmllver] = useState("{\"time_ver\":\"本地无数据\"}");
+    const [db_count, setDbCount] = useState("本地无数据");
     const [button_disabled, setButtondisabled] = useState(false);
+    var storedMusicDataString;
+    var storedMusicData;
+
+    useEffect(() => {
+        storedMusicDataString = localStorage.getItem('amlldata');
+        console.log("[localdb]初始化");
+        if (storedMusicDataString == null) {
+            //本地无数据时,使用.
+            storedMusicDataString = "{\"time_ver\":\"本地无数据\"}";
+            storedMusicData = JSON.parse(storedMusicDataString);
+            setAmllver(storedMusicData.time_ver);
+            setDbCount(0);
+            console.log("[localdb]本地无数据");
+        } else {
+            //本地有数据时,使用[0]查询第一个数据的ver
+            storedMusicData = JSON.parse(storedMusicDataString);
+            setAmllver(storedMusicData[0].time_ver);
+            setDbCount(storedMusicData.length);
+            console.log("[localdb]检测到本地数据 版本" + storedMusicData[0].time_ver + " 共" + storedMusicData.length + "条");
+        }
+    }, []); // 空的依赖项数组，表示副作用只在组件挂载和卸载时执行
 
     const updateData = () => {
         function fetchData() {
@@ -56,11 +62,13 @@ function Localdb() {
             // 获取数据
             // 从GithubAPI获取数据
             var amll_data = [];
+            var maplength = 0;
 
             fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/git/trees/main?recursive=1')
                 .then(res => res.json())
                 .then(data => {
-                    var maplength = data.length;
+                    maplength = data.tree.length;
+                    console.log("[localdb]Github Api DataLength:" + maplength );
                     var i = 0;
                     const tree = data.tree;
                     // 过滤出需要的文件
@@ -76,38 +84,42 @@ function Localdb() {
 
                         if (i == 0) {
                             setProgressPercent(30);
-                            setProgressHint("匹配歌曲信息");
+                            setProgressHint("准备匹配歌曲信息");
                         }
                         // 从网易云API获取数据
-                        const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id);
-                        const data = await response.json();
-                        const s_name = data?.songs?.[0]?.name;
-                        const s_sname = data?.songs?.[0]?.ar[0].name;
-                        const s_pic = data?.songs?.[0]?.al.picUrl;
-
-                        if (i == Math.ceil(maplength / 4)) {
-                            setProgressPercent(50);
-                            setProgressHint("匹配文件信息");
+                        try {
+                            const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id);
+                            const data = await response.json();
+                            const s_name = data?.songs?.[0]?.name;
+                            const s_sname = data?.songs?.[0]?.ar[0].name;
+                            const s_pic = data?.songs?.[0]?.al.picUrl;
+                            const response_1 = await fetch('https://163.ink2link.cn/song/url/v1?id=' + ttml_id + '&level=standard');
+                            const data_1 = await response_1.json();
+    
+                            // 部分无版权歌曲统一替换url
+                            // console.log(i ,"获取歌曲url" , data_1.data[0].url)
+                            if (data_1.data[0].url == null) {
+                                console.log(i, "歌曲url错误,可能为VIP歌曲或版权失效", data_1.data[0].url)
+                                data_1.data[0].url = 'http://www.baidu.com';
+                            }
+                            const s_downurl = data_1.data[0].url.replace(/^http:/, "https:");
+                            const newData = { s_id: ttml_id, s_name: s_name, s_sname: s_sname, s_pic: s_pic, s_downurl: s_downurl, ttml_url: ttml_url, ttml_downurl: ttml_downurl, time_ver: time_ver };
+                            amll_data.push(newData);
+                            i++;
+                        } catch (error) {
+                            console.error('[localdb]fetch故障', error);
+                            // 处理错误...
                         }
 
-                        const response_1 = await fetch('https://163.ink2link.cn/song/url/v1?id=' + ttml_id + '&level=standard');
-                        const data_1 = await response_1.json();
-
-                        if (i == Math.ceil(maplength / 1.5)) {
-                            setProgressPercent(70);
-                            setProgressHint("处理数据");
-                        }
-
-                        // 部分无版权歌曲统一替换url
-                        // console.log(i ,"获取歌曲url" , data_1.data[0].url)
-                        if (data_1.data[0].url == null) {
-                            console.log(i, "歌曲url错误,可能为VIP歌曲或版权失效", data_1.data[0].url)
-                            data_1.data[0].url = 'http://www.baidu.com';
-                        }
-                        const s_downurl = data_1.data[0].url.replace(/^http:/, "https:");
-                        const newData = { s_id: ttml_id, s_name: s_name, s_sname: s_sname, s_pic: s_pic, s_downurl: s_downurl, ttml_url: ttml_url, ttml_downurl: ttml_downurl, time_ver: time_ver };
-                        amll_data.push(newData);
-                        i++;
+                        // if (i == Math.ceil(maplength / 4)) {
+                        var j = i * 6;
+                        var k = j / maplength;
+                        setProgressPercent(k * 248);
+                        setProgressHint("匹配文件信息, 第" + i + "条");
+                        // }else if(i == Math.ceil(maplength / 3)){
+                        //     setProgressPercent(50);
+                        //     setProgressHint("匹配文件信息, 第" + i + "条");
+                        // }
                     });
                     // 等待所有异步请求完成
                     Promise.all(promises)
