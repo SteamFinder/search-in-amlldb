@@ -29,6 +29,7 @@ function Localdb() {
 
     var storedMusicDataString = localStorage.getItem('amlldata');
     var amll_time_ver;
+    var db_length_count;
     if (storedMusicDataString == null) {
         //本地无数据时,使用.
         storedMusicDataString = "{\"time_ver\":\"本地无数据\"}";
@@ -37,10 +38,11 @@ function Localdb() {
     } else {
         //本地有数据时,使用[0]查询第一个数据的ver
         storedMusicData = JSON.parse(storedMusicDataString);
-        amll_time_ver = storedMusicData[0].time_ver
+        amll_time_ver = storedMusicData[0].time_ver;
+        db_length_count = storedMusicData.length;
     }
     const [amll_ver, setAmllver] = useState(amll_time_ver);
-    const [db_count, setDbCount] = useState(0);
+    const [db_count, setDbCount] = useState(db_length_count);
     const [button_disabled, setButtondisabled] = useState(false);
 
     const updateData = () => {
@@ -195,6 +197,7 @@ function Localdb() {
                                     <p> - Add     player and test area</p>
                                     <p> - Update  database button's style</p>
                                     <p> - Prepare mobile devices optimization</p>
+                                    <p> - Fix     wrong database count</p>
                                 </>
                             ),
                         },
