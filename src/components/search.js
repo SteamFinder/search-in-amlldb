@@ -36,6 +36,11 @@ function Search() {
             key: 's_id',
         },
         {
+            title: '歌词创建者',
+            dataIndex: 'ttml_create',
+            key: 'ttml_create',
+        },
+        {
             title: 'Action',
             key: 'action',
             render: (_, record) => (
@@ -128,14 +133,14 @@ function Search() {
         showDrawer();
     };
 
-        // 用来接收点击事件 播放
-        const handlePlayClick = (s_id) => {
-            console.log('点击播放,歌曲id:', s_id);
-            const matchedDetail = details.find(detail => detail.s_id === s_id);
-            console.log("匹配成功:", matchedDetail);
-            localStorage.setItem('amllplay', JSON.stringify(matchedDetail));
-            window.dispatchEvent(new Event('playDataChanged'));
-        };
+    // 用来接收点击事件 播放
+    const handlePlayClick = (s_id) => {
+        console.log('点击播放,歌曲id:', s_id);
+        const matchedDetail = details.find(detail => detail.s_id === s_id);
+        console.log("匹配成功:", matchedDetail);
+        localStorage.setItem('amllplay', JSON.stringify(matchedDetail));
+        window.dispatchEvent(new Event('playDataChanged'));
+    };
 
     // 从 localStorage 中检索存储的字符串
     var localdata = [];
@@ -148,17 +153,38 @@ function Search() {
         const storedMusicData = JSON.parse(storedMusicDataString);
         details = storedMusicData;
         var localdata = [];
-        storedMusicData.map(item => (
+        storedMusicData.map(item => {
             // 使用map生成React元素
+            var infos = " 未能成功匹配文件更改信息 /";
+            var infos2 = "未能成功匹配";
+            if (item.ttml_info.length != 0) {
+                var w = 0;
+                while (true) {
+                    if( w == 0 ){
+                        infos = "";
+                    }
+                    infos = infos + " " + item.ttml_info[w].ttml_ver + " " + item.ttml_info[w].ttml_author + " / ";
+                    if (w + 1 == item.ttml_info.length) {
+                        infos2 = item.ttml_info[w].ttml_author;
+                    }
+                    if (w + 1 == item.ttml_info.length) {
+                        break;
+                    }
+                    w++;
+                }
+            }
+            
             localdata.push({
                 key: item.s_id,
                 s_pic: <img src={item.s_pic} width='40vh' />,
                 s_name: item.s_name,
                 s_sname: item.s_sname,
                 s_id: item.s_id,
-                action: item.s_id
+                action: item.s_id,
+                ttml_info: infos,
+                ttml_create: infos2
             })
-        ))
+        })
     }
     const [data, setData] = useState(localdata);
     const [searchdata, setSearchdata] = useState(localdata);
@@ -168,17 +194,37 @@ function Search() {
             var upddata = [];
             var storedMusicDataString = localStorage.getItem('amlldata');
             const storedMusicData = JSON.parse(storedMusicDataString);
-            storedMusicData.map(item => (
+            storedMusicData.map(item => {
                 // 使用map生成React元素
+                var infos = " 未能成功匹配文件更改信息 /";
+                var infos2 = "未能成功匹配";
+                if (item.ttml_info.length != 0) {
+                    var w = 0;
+                    while (true) {
+                        if( w == 0 ){
+                            infos = "";
+                        }
+                        infos = infos + " " + item.ttml_info[w].ttml_ver + " " + item.ttml_info[w].ttml_author + " / ";
+                        if (w + 1 == item.ttml_info.length) {
+                            infos2 = item.ttml_info[w].ttml_author;
+                        }
+                        if (w + 1 == item.ttml_info.length) {
+                            break;
+                        }
+                        w++;
+                    }
+                }
                 upddata.push({
                     key: item.s_id,
                     s_pic: <img src={item.s_pic} width='40vh' />,
                     s_name: item.s_name,
                     s_sname: item.s_sname,
                     s_id: item.s_id,
-                    action: item.s_id
+                    action: item.s_id,
+                    ttml_info: infos,
+                    ttml_create: infos2
                 })
-            ))
+            })
             setData(upddata);
             setSearchdata(upddata);
         };
@@ -252,7 +298,7 @@ function Search() {
         //setProgressVisible(false);
         setButtondisabled(false);
         success();
-        function initProgress(){
+        function initProgress() {
             setProgressPercent(0);
             setProgressHint("等待查询");
             console.log("重置Progress显示")
@@ -303,7 +349,23 @@ function Search() {
                 )}
             </Space.Compact>
             <Divider />
-            <Table columns={columns} dataSource={data} size='middle' pagination={{ pageSize: 7, showSizeChanger: false, showQuickJumper: true }} />
+            <Table columns={columns}
+                dataSource={data}
+                size='middle'
+                pagination={{ pageSize: 7, showSizeChanger: false, showQuickJumper: true }}
+                expandable={{
+                    expandedRowRender: (record) => (
+                        <p
+                            style={{
+                                margin: 0,
+                            }}
+                        >
+                            更改记录: /{record.ttml_info}
+                        </p>
+                    ),
+                    rowExpandable: (record) => record.name !== 'Not Expandable',
+                }}
+            />
             <Drawer title="歌曲详情" placement="right" onClose={onClose} open={open}>
                 {drawerinfo}
                 <Card style={{ width: '100%', }} title="相关资源下载" tabList={tabList} activeTabKey={activeTabKey1} onTabChange={onTab1Change} tabProps={{ size: 'middle', }} hoverable={true}>{contentList[activeTabKey1]}</Card>

@@ -58,21 +58,79 @@ function Localdb() {
             // Progress
             setProgressVisible(true);
             setProgressPercent(10);
-            setProgressHint("联系Github API");
+            setProgressHint("[1/4]联系Github API");
             // 获取数据
             // 从GithubAPI获取数据
             var amll_data = [];
+            var amll_issue_data = [];
             var maplength = 0;
 
             fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/git/trees/main?recursive=1')
                 .then(res => res.json())
-                .then(data => {
+                .then(async data => {
                     maplength = data.tree.length;
-                    console.log("[localdb]Github Api DataLength:" + maplength );
+                    console.log("[localdb]Github Api DataLength:" + maplength);
                     var i = 0;
                     const tree = data.tree;
                     // 过滤出需要的文件
                     const ttmlFiles = tree.filter(file => file.path.endsWith('.ttml') && file.path.startsWith('ncm-lyrics/'));
+
+                    // TODO: 歌词作者
+                    await fetchAllPages();
+                    async function fetchAllPages() {
+                        try {
+                            var amll_issues = [];
+                            var p = 0;
+                            while (true) {
+                                p++;
+                                const response = await fetch('https://api.github.com/repos/Steve-xmh/amll-ttml-db/pulls?state=closed&per_page=100&page=' + p);
+                                const data = await response.json();
+                                // if (p == 2) {
+                                //     break;
+                                // }
+                                if (data.length == 0) {
+                                    break;
+                                }
+                                console.log("[localdb]Get Github Issues, page" + p);
+                                console.log(data);
+                                amll_issues.push(data);
+                                var j = 0;
+                                while (true) {
+                                    if (j + 1 == data.length) {
+                                        break;
+                                    } else if (!data[j].body) {
+                                        data[j].body = "null";
+                                    } else if (data[j].merged_at) {
+                                        let authorMatch = data[j].body.match(/歌词作者\n(@\S+)\n/);
+                                        let author = authorMatch ? authorMatch[1] : null;
+
+                                        let songIdMatch = data[j].body.match(/歌曲关联网易云音乐 ID\n- `(\d+)`\n/);
+                                        let songId = songIdMatch ? songIdMatch[1] : null;
+
+                                        let song_old_IdMatch = data[j].body.match(/歌词关联歌曲 ID\n- `(\d+)`\n/);
+                                        let song_old_Id = song_old_IdMatch ? song_old_IdMatch[1] : null;
+
+                                        if (song_old_Id) {
+                                            const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: song_old_Id };
+                                            amll_issue_data.push(newIssueData);
+                                        } else if (songId) {
+                                            const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: songId };
+                                            amll_issue_data.push(newIssueData);
+                                        }
+
+                                    }
+                                    j++;
+                                }
+                            }
+                            console.log(amll_issue_data);
+                        } catch (error) {
+                            console.error('[localdb]fetch故障, 可能需要启用代理', error);
+                            // 处理错误...
+                        }
+                    }
+
+
+
                     // 输出id
                     const promises = ttmlFiles.map(async file => {
                         const fileName = file.path.split('/')[1];  // 获取文件名
@@ -84,7 +142,7 @@ function Localdb() {
 
                         if (i == 0) {
                             setProgressPercent(30);
-                            setProgressHint("准备匹配歌曲信息");
+                            setProgressHint("[2/4]准备匹配歌曲信息");
                         }
                         // 从网易云API获取数据
                         try {
@@ -95,7 +153,7 @@ function Localdb() {
                             const s_pic = data?.songs?.[0]?.al.picUrl;
                             const response_1 = await fetch('https://163.ink2link.cn/song/url/v1?id=' + ttml_id + '&level=standard');
                             const data_1 = await response_1.json();
-    
+
                             // 部分无版权歌曲统一替换url
                             // console.log(i ,"获取歌曲url" , data_1.data[0].url)
                             if (data_1.data[0].url == null) {
@@ -103,11 +161,39 @@ function Localdb() {
                                 data_1.data[0].url = 'http://www.baidu.com';
                             }
                             const s_downurl = data_1.data[0].url.replace(/^http:/, "https:");
-                            const newData = { s_id: ttml_id, s_name: s_name, s_sname: s_sname, s_pic: s_pic, s_downurl: s_downurl, ttml_url: ttml_url, ttml_downurl: ttml_downurl, time_ver: time_ver };
+                            var ttml_author = [];
+                            async function matchTTMLAuthor() {
+                                var k = 0;
+                                while (true) {
+                                    if (k + 1 == amll_issue_data.length) {
+                                        break;
+                                    }
+                                    if (ttml_id == amll_issue_data[k].song_id) {
+                                        const author_info = { ttml_ver: amll_issue_data[k].ttml_time, ttml_author: amll_issue_data[k].ttml_author }
+                                        ttml_author.push(author_info)
+                                        // console.log(ttml_id)
+                                        // console.log(ttml_author)
+                                    }
+                                    k++;
+                                }
+                            }
+                            await matchTTMLAuthor();
+                            const newData = {
+                                s_id: ttml_id,
+                                s_name: s_name,
+                                s_sname: s_sname,
+                                s_pic: s_pic,
+                                s_downurl: s_downurl,
+                                ttml_url: ttml_url,
+                                ttml_downurl: ttml_downurl,
+                                time_ver: time_ver,
+                                ttml_info: ttml_author
+                            };
                             amll_data.push(newData);
                             i++;
+
                         } catch (error) {
-                            console.error('[localdb]fetch故障', error);
+                            console.error('[localdb]fetch故障, 可能需要启用代理', error);
                             // 处理错误...
                         }
 
@@ -115,7 +201,7 @@ function Localdb() {
                         var j = i * 6;
                         var k = j / maplength;
                         setProgressPercent(k * 248);
-                        setProgressHint("匹配文件信息, 第" + i + "条");
+                        setProgressHint("[3/4]匹配文件信息, 第" + i + "条");
                         // }else if(i == Math.ceil(maplength / 3)){
                         //     setProgressPercent(50);
                         //     setProgressHint("匹配文件信息, 第" + i + "条");
@@ -126,7 +212,7 @@ function Localdb() {
                         .then(() => {
                             // 所有异步请求完成后执行这里的代码
                             setProgressPercent(80);
-                            setProgressHint("存储数据");
+                            setProgressHint("[4/4]存储数据");
                             // 存储到 localStorage
                             localStorage.setItem('amlldata', JSON.stringify(amll_data));
 
@@ -202,6 +288,17 @@ function Localdb() {
                     items={[
                         {
                             color: 'green',
+                            children: (
+                                <>
+                                    <p><b>23.0.0</b> - 2024/5/12</p>
+                                    <p>AMLL 3.1.0, React 0.1.5, Core 0.1.3</p>
+                                    <p> - Add  ttml changing infomations</p>
+                                    <p> - Add  ttml creator informations</p>
+                                </>
+                            ),
+                        },
+                        {
+                            color: 'gray',
                             children: (
                                 <>
                                     <p><b>22.0.0</b> - 2024/5/11</p>

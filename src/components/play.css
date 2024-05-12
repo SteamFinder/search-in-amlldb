@@ -1,0 +1,20 @@
+.AMLLPlayer {
+    z-index: 999;
+}
+
+@font-face {
+    font-family: 'Search-In-AMLLDB';
+    src: url('./PF-M.ttf') format('ttf'),
+        url('./SF-D-M.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.AMLLFont {
+    font-family: 'Search-In-AMLLDB' !important;
+}
+
+:root {
+    --amll-lyric-player-font-size: 4vh;
+    /* 设置AMLL LyricPlayer FontSize */
+}

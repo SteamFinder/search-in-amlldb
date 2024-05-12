@@ -4,6 +4,7 @@ import { EplorRenderer } from '@applemusic-like-lyrics/core';
 import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
 // import { parseTTML } from '../amll-dev-src/packages/bncm/src'
 import { Alert } from 'antd';
+import './play.css';
 import './SF-D-M.ttf';
 import './PF-M.ttf';
 
@@ -18,7 +19,7 @@ function Play() {
         // Parse TTML
         parseTTMLs();
         async function parseTTMLs() {
-            const response = await fetch("https://mirror.ghproxy.com/https://raw.githubusercontent.com/Steve-xmh/amll-ttml-db/main/ncm-lyrics/1308359582.ttml"); // Replace with the correct path
+            const response = await fetch("https://mirror.ghproxy.com/https://raw.githubusercontent.com/Steve-xmh/amll-ttml-db/main/ncm-lyrics/1382781549.ttml"); // Replace with the correct path
             const ttmlInput = await response.text();
             const parsedResult = parseTTML(ttmlInput);
             setLyricLines(parsedResult)
@@ -44,7 +45,7 @@ function Play() {
         }
 
         function setBg() {
-            picUrl = "https://p2.music.126.net/idpBKqSHCDfEw8RAofHWbQ==/109951163540042089.jpg";
+            picUrl = "https://p2.music.126.net/6CB6Jsmb7k7qiJqfMY5Row==/109951164260234943.jpg";
             console.log('[Play]setAlbumUrl:', picUrl);
             var albumImage = new Image();
             albumImage.src = picUrl;
@@ -83,40 +84,40 @@ function Play() {
     }
     return (
         <>
-            <audio id="AMLLPlayer" controls className="AMLLPlayer" src="https://ink2link.cn/b346_23de_5e90_3c2f22e190b784d84adc1b6c3ebcaf35.mp3" />
-            <Alert
+            <audio id="AMLLPlayer" controls className="AMLLPlayer" src="https://ink2link.cn/83772ys62g6FD711.mp3" autoplay style={{zIndex: 999}} />
+            {/* <Alert
                 message="Play"
                 description="This is play page."
                 type="success"
                 showIcon
-            />
+            /> */}
             <BackgroundRender
                 style={{
                     position: 'absolute',
-                    top: 80,
                     width: '100%',
-                    height: '90%',
+                    height: '100%',
                     contain: "paint layout",
                     overflow: "hidden",
                 }}
                 album={albumUrl}
                 renderer={EplorRenderer}
             />
+            <div className='AMLLFont'>
             <LyricPlayer
                 onLyricLineClick={(line) => getLines(line)}
-                alignPosition="0.2"
+                alignPosition="0.4"
                 lyricLines={lyricLines}
                 currentTime={currentTime}
                 style={{
                     position: 'absolute',
-                    top: 80,
+                    paddingLeft: '3vw',
                     width: '100%',
-                    height: '90%',
-                    fontFamily: 'SF Pro Display Medium, PingFang Medium, sans-serif',
+                    height: '100%',
+                    fontFamily: 'Search-In-AMLLDB, SF Pro Display Medium, PingFang Medium, sans-serif',
                     overflow: "hidden",
-                    // fontSize: "var(--amll-lyric-player-font-size,max(min(5vh, 10vw),12px));",
                 }}
             />
+            </div>
         </>
     );
 }
