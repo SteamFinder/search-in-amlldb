@@ -104,26 +104,33 @@ function Localdb() {
                                         let authorMatch = data[j].body.match(/歌词作者\n(@\S+)\n/);
                                         let author = authorMatch ? authorMatch[1] : null;
 
-                                        // let songIdMatch = data[j].body.match(/歌曲关联网易云音乐 ID\n- `(\d+)`\n/);
-                                        // let songId = songIdMatch ? songIdMatch[1] : null;
-
-                                        // let song_old_IdMatch = data[j].body.match(/歌词关联歌曲 ID\n- `(\d+)`\n/);
-                                        // let song_old_Id = song_old_IdMatch ? song_old_IdMatch[1] : null;
-
+                                        let start = data[j].body.indexOf('### 歌曲关联网易云音乐 ID');
+                                        let end = data[j].body.indexOf('###', start + 1);
+                                        let section = data[j].body.slice(start, end);
                                         let regex = /`(\d+)`/g;
                                         let match;
-                                        while ((match = regex.exec(data[j].body)) !== null) {
-                                            const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: match[1] };
-                                            amll_issue_data.push(newIssueData);
-                                        }
 
-                                        // if (song_old_Id) {
-                                        //     const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: song_old_Id };
-                                        //     amll_issue_data.push(newIssueData);
-                                        // } else if (songId) {
-                                        //     const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: songId };
-                                        //     amll_issue_data.push(newIssueData);
-                                        // }
+                                        if (section) {
+                                            //新版bot
+                                            while ((match = regex.exec(section)) !== null) {
+                                                const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: match[1] };
+                                                amll_issue_data.push(newIssueData);
+                                            }
+                                        } else {
+                                            //旧版bot
+                                            start = data[j].body.indexOf('### 歌词关联歌曲 ID');
+                                            end = data[j].body.indexOf('###', start + 1);
+                                            section = data[j].body.slice(start, end);
+                                            if (section) {
+                                                while ((match = regex.exec(section)) !== null) {
+                                                    const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: match[1] };
+                                                    amll_issue_data.push(newIssueData);
+                                                }
+                                            }else{
+                                                //远古时期Pr
+                                                console.log("无法获取歌曲关联id, 匹配文件更改记录失败");
+                                            }
+                                        }
 
                                     }
                                     j++;
