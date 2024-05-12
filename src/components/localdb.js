@@ -129,6 +129,7 @@ function Localdb() {
                                             }else{
                                                 //远古时期Pr
                                                 console.log("无法获取歌曲关联id, 匹配文件更改记录失败");
+                                                console.log(data[j].body);
                                             }
                                         }
 
