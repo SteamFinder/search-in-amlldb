@@ -33,21 +33,23 @@ function Localdb() {
     var storedMusicData;
 
     useEffect(() => {
-        storedMusicDataString = localStorage.getItem('amlldata');
-        console.log("[localdb]初始化");
-        if (storedMusicDataString == null) {
+        var storedMusicDataStringEffect;
+        var storedMusicDataEffect;
+        storedMusicDataStringEffect = localStorage.getItem('amlldata');
+        console.log("[localdb]初始化, localdb版本:20240513d");
+        if (storedMusicDataStringEffect === null || storedMusicDataStringEffect.length === 0) {
             //本地无数据时,使用.
-            storedMusicDataString = "{\"time_ver\":\"本地无数据\"}";
-            storedMusicData = JSON.parse(storedMusicDataString);
-            setAmllver(storedMusicData.time_ver);
+            storedMusicDataStringEffect = "{\"time_ver\":\"本地无数据或数据损坏\"}";
+            storedMusicDataEffect = JSON.parse(storedMusicDataStringEffect);
+            setAmllver(storedMusicDataEffect.time_ver);
             setDbCount(0);
-            console.log("[localdb]本地无数据");
+            console.log("[localdb]本地无数据或数据损坏");
         } else {
             //本地有数据时,使用[0]查询第一个数据的ver
-            storedMusicData = JSON.parse(storedMusicDataString);
-            setAmllver(storedMusicData[0].time_ver);
-            setDbCount(storedMusicData.length);
-            console.log("[localdb]检测到本地数据 版本" + storedMusicData[0].time_ver + " 共" + storedMusicData.length + "条");
+            storedMusicDataEffect = JSON.parse(storedMusicDataStringEffect);
+            setAmllver(storedMusicDataEffect[0].time_ver);
+            setDbCount(storedMusicDataEffect.length);
+            console.log("[localdb]检测到本地数据 版本" + storedMusicDataEffect[0].time_ver + " 共" + storedMusicDataEffect.length + "条");
         }
     }, []); // 空的依赖项数组，表示副作用只在组件挂载和卸载时执行
 
@@ -69,7 +71,8 @@ function Localdb() {
                 .then(res => res.json())
                 .then(async data => {
                     maplength = data.tree.length;
-                    console.log("[localdb]Github Api DataLength:" + maplength);
+                    console.log("[localdb]注意: Github API对于每个IP地址进行了请求频率限制, 为60次/1h, 请勿高频请求");
+                    console.log("[localdb]Get Github Git Trees from API, DataLength:" + maplength);
                     var i = 0;
                     const tree = data.tree;
                     // 过滤出需要的文件
@@ -88,15 +91,15 @@ function Localdb() {
                                 // if (p == 2) {
                                 //     break;
                                 // }
-                                if (data.length == 0) {
+                                if (data.length === 0) {
                                     break;
                                 }
-                                console.log("[localdb]Get Github Issues, page" + p);
+                                console.log("[localdb]Get Github PRs History from API, Page:" + p);
                                 console.log(data);
                                 amll_issues.push(data);
                                 var j = 0;
                                 while (true) {
-                                    if (j + 1 == data.length) {
+                                    if (j + 1 === data.length) {
                                         break;
                                     } else if (!data[j].body) {
                                         data[j].body = "null";
@@ -126,41 +129,42 @@ function Localdb() {
                                                     const newIssueData = { ttml_time: data[j].created_at, ttml_author: author, song_id: match[1] };
                                                     amll_issue_data.push(newIssueData);
                                                 }
-                                            }else{
+                                            } else {
                                                 //远古时期Pr
-                                                console.log("无法获取歌曲关联id, 匹配文件更改记录失败");
-                                                console.log(data[j].body);
+                                                console.log("[localdb]无法获取歌曲关联id, 匹配文件更改记录失败, 可能为早期Pulls \ntitle:", data[j].title, "\nurl:", data[j].html_url, "\ncreated_at:", data[j].created_at);
+                                                // console.log(data[j].body);
                                             }
                                         }
-
                                     }
                                     j++;
                                 }
                             }
+                            console.log("[localdb]Get Github PRs History from API - Fininshed");
                             console.log(amll_issue_data);
                         } catch (error) {
-                            console.error('[localdb]fetch故障, 可能需要启用代理', error);
+                            console.error('[localdb]fetch出现故障, 可能需要启用代理或清除localstorage数据', error);
                             // 处理错误...
                         }
                     }
 
 
-
+                    console.log("[localdb]匹配歌曲信息, 联系163api");
                     // 输出id
                     const promises = ttmlFiles.map(async file => {
                         const fileName = file.path.split('/')[1];  // 获取文件名
                         const ttmlid = fileName.split('.')[0];  // 移除扩展名
                         const ttml_id = ttmlid;
                         const ttml_url = 'https://github.com/Steve-xmh/amll-ttml-db/blob/main/ncm-lyrics/' + ttmlid + '.ttml';
-                        const ttml_downurl = "https://mirror.ghproxy.com/" + 'https://raw.githubusercontent.com/Steve-xmh/amll-ttml-db/main/ncm-lyrics/' + ttmlid + '.ttml'; //ghproxy 避免raw.gh被ban
+                        const ttml_downurl = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Steve-xmh/amll-ttml-db/main/ncm-lyrics/" + ttmlid + '.ttml'; //ghproxy 避免raw.gh被ban
                         const time_ver = new Date().toLocaleString();
 
-                        if (i == 0) {
-                            setProgressPercent(30);
-                            setProgressHint("[2/4]准备匹配歌曲信息");
-                        }
                         // 从网易云API获取数据
                         try {
+                            if (i === 0) {
+                                setProgressPercent(30);
+                                setProgressHint("[2/4]准备匹配歌曲信息");
+                            }
+
                             const response = await fetch('https://163.ink2link.cn/song/detail?ids=' + ttml_id);
                             const data = await response.json();
                             const s_name = data?.songs?.[0]?.name;
@@ -172,7 +176,7 @@ function Localdb() {
                             // 部分无版权歌曲统一替换url
                             // console.log(i ,"获取歌曲url" , data_1.data[0].url)
                             if (data_1.data[0].url == null) {
-                                console.log(i, "歌曲url错误,可能为VIP歌曲或版权失效", data_1.data[0].url)
+                                console.log("序列位置:", i, "歌曲url获取错误,可能为VIP歌曲或版权失效, data:", data_1.data[0].url)
                                 data_1.data[0].url = 'http://www.baidu.com';
                             }
                             const s_downurl = data_1.data[0].url.replace(/^http:/, "https:");
@@ -180,10 +184,10 @@ function Localdb() {
                             async function matchTTMLAuthor() {
                                 var k = 0;
                                 while (true) {
-                                    if (k + 1 == amll_issue_data.length) {
+                                    if (k + 1 === amll_issue_data.length) {
                                         break;
                                     }
-                                    if (ttml_id == amll_issue_data[k].song_id) {
+                                    if (ttml_id === amll_issue_data[k].song_id) {
                                         const author_info = { ttml_ver: amll_issue_data[k].ttml_time, ttml_author: amll_issue_data[k].ttml_author }
                                         ttml_author.push(author_info)
                                         // console.log(ttml_id)
@@ -208,7 +212,7 @@ function Localdb() {
                             i++;
 
                         } catch (error) {
-                            console.error('[localdb]fetch故障, 可能需要启用代理', error);
+                            console.error('[localdb]fetch出现故障, 可能需要启用代理或清除localstorage数据', error);
                             // 处理错误...
                         }
 
@@ -229,6 +233,7 @@ function Localdb() {
                             setProgressPercent(80);
                             setProgressHint("[4/4]存储数据");
                             // 存储到 localStorage
+                            console.log("[localdb]已存储至localstorage");
                             localStorage.setItem('amlldata', JSON.stringify(amll_data));
 
                             // 1. 清空存储的数据
@@ -239,6 +244,7 @@ function Localdb() {
                             storedMusicDataString = localStorage.getItem('amlldata');
                             storedMusicData = JSON.parse(storedMusicDataString);
                             // 4. 更新状态 +歌词总数
+                            console.log("[localdb]通过useState钩子更新视图数据");
                             setAmllver(storedMusicData[0]?.time_ver);
                             setDbCount(storedMusicData.length);
 
