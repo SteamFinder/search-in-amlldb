@@ -111,16 +111,16 @@ function App() {
                 icon: <UserSwitchOutlined />,
                 label: '开发者选项',
               },
-              {
-                key: '/search-in-amlldb/player',
-                icon: <YoutubeOutlined />,
-                label: '播放器(beta)',
-              },
-              {
-                key: '/search-in-amlldb/play',
-                icon: <FireOutlined />,
-                label: '测试区',
-              },
+              // {
+              //   key: '/search-in-amlldb/player',
+              //   icon: <YoutubeOutlined />,
+              //   label: '播放器(beta)',
+              // },
+              // {
+              //   key: '/search-in-amlldb/play',
+              //   icon: <FireOutlined />,
+              //   label: '测试区',
+              // },
             ]}
             onClick={onMenuClick}
           />
@@ -160,7 +160,7 @@ function App() {
               textAlign: 'center',
             }}
           >
-            Search In AMLL-DB <b>23.0.0</b> @AMLL 3.1.0, React 0.1.5, Core 0.1.3
+            Search In AMLL-DB <b>23.1.0</b> @AMLL 3.1.0, React 0.1.5, Core 0.1.3
           </Footer>
         </Layout>
       </Layout>

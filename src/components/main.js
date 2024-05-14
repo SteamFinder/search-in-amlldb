@@ -35,6 +35,7 @@ function Main() {
                 <Col span={10}>
                     <h1>Search In AMLL DB</h1>
                     <p>Powered by <img src={Testimg} width="5%" style={{ verticalAlign: 'middle' }} />React</p>
+                    <p>点击顶部工具栏 <CloudSyncOutlined /> 获取/更新数据</p>
                 </Col>
                 <Col span={3}></Col>
             </Row>
