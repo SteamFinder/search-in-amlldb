@@ -1,0 +1,66 @@
+.mini-player {
+    height: 64px;
+    width: 30em;
+    display: flex;
+    padding: 10px;
+    margin: 0;
+    border-radius: 10px;
+    color: #333;
+}
+
+.audio-action {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+    line-height: 20px;
+}
+
+.mini-player img {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+.mini-player div {
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+}
+
+.mini-player div h3, .mini-player span {
+    margin: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding: 0;
+    line-height: normal;
+    font-size: 14px; /* 改变字体大小 */
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center !important;
+    margin-left: 20px !important;
+}
+
+.info-inner span {
+    display: inline;
+}
+
+.info-inner {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: center !important;
+    margin-bottom: 10px;
+}
+
+.info-inner:last-child {
+    color: #6E6D70 !important;
+    font-size: 10px !important;
+}
+
+.slider {
+    width: 35em;
+}
