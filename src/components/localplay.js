@@ -1,16 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { LyricPlayer, BackgroundRender } from "@applemusic-like-lyrics/react";
-import { EplorRenderer } from '@applemusic-like-lyrics/core';
-import { parseTTML } from '../amll-core-src/lyric/ttml.ts'
-import { PlayCircleOutlined, PlayCircleTwoTone } from '@ant-design/icons';
-import { Button, Drawer, Progress, notification } from 'antd';
+import React, {useState, useRef, useEffect} from 'react';
+import {LyricPlayer, BackgroundRender} from "@applemusic-like-lyrics/react";
+import {EplorRenderer} from '@applemusic-like-lyrics/core';
+import {parseTTML} from '../amll-core-src/lyric/ttml.ts'
+import {PlayCircleOutlined, PlayCircleTwoTone} from '@ant-design/icons';
+import {Button, Drawer, Progress, notification} from 'antd';
 import './localplay.css';
 import './SF-D-M.ttf';
+import {useDispatch, useSelector} from 'react-redux';
 
 //注意 目前amll在npm的仓库不是最新版 目前本项目的amll是dev分支手动覆盖的
 //影响 amll/core amll/react
 
 function Localplay() {
+
+    const dispatch = useDispatch();
 
     // notification when no s_url
     const [api, contextHolder] = notification.useNotification();
@@ -49,8 +52,8 @@ function Localplay() {
     // 绑定 更新歌词/歌曲
     const [currentTime, setCurrentTime] = useState(0);
     const [lyricLines, setLyricLines] = useState([]);
-    const [drawerContent, setDrawerContent] = useState(<audio id="onAudio" controls className="onAudio" />);
-    const [drawerFooter, setDrawerFooter ] = useState("");
+    const [drawerContent, setDrawerContent] = useState(<audio id="onAudio" controls className="onAudio"/>);
+    const [drawerFooter, setDrawerFooter] = useState("");
     const [albumUrl, setAlbumUrl] = useState("");
     // const lyricPlayerRef = useRef(null);
     var playdata;
@@ -137,11 +140,16 @@ function Localplay() {
                     if (playdata[0].s_downurl == "https://www.baidu.com") {
                         openNotification('topLeft');
                     }
-                    setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" className="onAudio" controls autoPlay />);
+                    setDrawerContent(<audio src={playdata[0].s_downurl} id="onAudio" className="onAudio" controls
+                                            autoPlay/>);
                     setDrawerFooter(playdata[0].s_name + " - " + playdata[0].s_sname);
 
                     setProgressPercent(60);
                     setProgressHint("调用AMLL");
+
+                    dispatch({type: 'SET_SONG', song: playdata[0]});
+                    dispatch({type: 'TOGGLE_PLAY'});
+                    dispatch({type: 'SET_PROGRESS', progress: 0});
 
                     showDrawer();
                     executeInOrder();
@@ -168,9 +176,14 @@ function Localplay() {
                 setTimeout(reBuffer, 1000);
                 setTimeout(setBg, 1000);
                 setTimeout(progressSuccess, 1000);
+
                 function reBuffer() {
                     const audio = document.getElementById("onAudio");
                     console.log(audio);
+                    dispatch({type: 'SET_AUDIO', audio: audio})
+                    dispatch({type: 'TOGGLE_PLAY', isPlaying: true})
+                    dispatch({type: 'SET_SONG', song: playdata[0]});
+                    console.log(playdata[0]);
                     let lastTime = -1;
                     const frame = (time) => {
                         if (lastTime === -1) {
@@ -185,11 +198,13 @@ function Localplay() {
                     };
                     requestAnimationFrame(frame);
                 }
+
                 function setBg() {
                     picUrl = playdata[0].s_pic;
                     console.log('setAlbumUrl:', picUrl);
                     var albumImage = new Image();
                     albumImage.src = picUrl;
+                    dispatch({type: 'SET_PIC', picUrl: picUrl});
                     // albumImage.src = '/test.jpg';
                     // 解决跨域问题
                     albumImage.setAttribute('crossOrigin', '');
@@ -221,6 +236,7 @@ function Localplay() {
         const saudio = document.getElementById('onAudio');
         // 设置 audio 的当前播放时间为指定的秒数
         const starttimeInSeconds = starttime / 1000;
+        dispatch({type: 'SET_PROGRESS', progress: starttimeInSeconds / saudio.duration});
         saudio.currentTime = starttimeInSeconds;
         // 开始播放 audio
         saudio.play();
@@ -229,13 +245,14 @@ function Localplay() {
             console.error('播放被阻止:', error);
         });
     }
+
     return (
         <>
             {contextHolder}
             {!progressVisible && (
                 <Button
                     type="text"
-                    icon={playing ? <PlayCircleTwoTone twoToneColor="#52c41a" /> : <PlayCircleOutlined />}
+                    icon={playing ? <PlayCircleTwoTone twoToneColor="#52c41a"/> : <PlayCircleOutlined/>}
                     onClick={() => showDrawer()}
                     style={{
                         fontSize: '16px',
@@ -264,18 +281,18 @@ function Localplay() {
                 </Button>
             )}
             <Drawer title={drawerContent}
-                placement="right"
-                onClose={onClose}
-                open={open}
-                mask={false}
-                size={size}
-                className="playerDrawer"
-                style={{
-                    position: 'relative',
-                    // overflow: "hidden",
-                }}
-                classNames={classNames}
-                footer={drawerFooter}
+                    placement="right"
+                    onClose={onClose}
+                    open={open}
+                    mask={false}
+                    size={size}
+                    className="playerDrawer"
+                    style={{
+                        position: 'relative',
+                        // overflow: "hidden",
+                    }}
+                    classNames={classNames}
+                    footer={drawerFooter}
             >
                 <BackgroundRender
                     style={{

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Localplay from "./components/localplay";
 import Localdb from "./components/localdb";
+import MiniPlayer from "./components/miniplayer";
 import { UserSwitchOutlined } from '@ant-design/icons';
 import {
   MenuFoldOutlined,
@@ -64,7 +65,7 @@ function App() {
       console.log("用户UA 是否移动端", UAstatus);
       if(UAstatus === true){
         var root = document.documentElement; // 获取根元素
-        root.style.setProperty("--amll-lyric-player-font-size", "5vh"); // 设置CSS变量        
+        root.style.setProperty("--amll-lyric-player-font-size", "5vh"); // 设置CSS变量
       }
       if (UAstatus === true && i === 0) {
         console.log("用户UA 移动端 进行提示");
@@ -135,6 +136,7 @@ function App() {
             style={{
               padding: 0,
               background: colorBgContainer,
+              display:"flex"
             }}
           >
             <Button
@@ -149,6 +151,7 @@ function App() {
             />
             <Localplay />
             <Localdb />
+            <MiniPlayer/>
           </Header>
           <Content style={contentStyle}>
             {/* 二级路由出口 */}
