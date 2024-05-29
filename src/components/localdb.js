@@ -311,6 +311,16 @@ function Localdb() {
                             color: 'green',
                             children: (
                                 <>
+                                    <p><b>24.0.0</b> - 2024/5/29</p>
+                                    <p>AMLL 3.1.0, React 0.1.5, Core 0.1.3</p>
+                                    <p> - Add  player control bar</p>
+                                </>
+                            ),
+                        },
+                        {
+                            color: 'gray',
+                            children: (
+                                <>
                                     <p><b>23.0.0</b> - 2024/5/12</p>
                                     <p>AMLL 3.1.0, React 0.1.5, Core 0.1.3</p>
                                     <p> - Add  ttml changing infomations</p>
